@@ -273,15 +273,7 @@
     100% { opacity: 0; }
   }
 
-  /* burst canvas : particules dorées qui jaillissent au reveal */
-  .burst-canvas {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9998;
-  }
-
-  /* bulb overload : 1 pulse renforcé sur les ampoules quand la marquise
+/* bulb overload : 1 pulse renforcé sur les ampoules quand la marquise
      reçoit la classe .overload (toggled 600ms par MarqueeBulbs) */
   .marquee.overload .bulb {
     animation: bulb-overload 600ms ease-out forwards;
@@ -334,7 +326,6 @@
     .reveal-flash { animation: none; opacity: 0; }
     .app.tick-shake { animation: none; }
     .marquee.overload .bulb { animation: none; }
-    .burst-canvas { display: none; }
   }
   .title-tag {
     font-family: 'Special Elite', monospace;
@@ -1675,76 +1666,6 @@
     return <canvas ref={canvasRef} className="dust-particles" aria-hidden="true" />;
   }
 
-  // Burst doré au reveal (TÂCHE 5) — émission one-shot keyée par triggerKey.
-  // ~100 particules dorées partent du centre/bas du viewport (zone slot
-  // machine), gravity 0.18, fade out via life. RAF arrêté quand alive=0.
-  function BurstCanvas({ triggerKey = 0, count = 100 }) {
-    const canvasRef = useRef(null);
-    useEffect(() => {
-      if (!triggerKey) return;
-      if (typeof matchMedia !== "undefined" &&
-          matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = window.innerWidth, h = window.innerHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = w + "px";
-      canvas.style.height = h + "px";
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-
-      const cx = w / 2, cy = h * 0.55;
-      const particles = [];
-      for (let i = 0; i < count; i++) {
-        const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 0.95;
-        const speed = 4 + Math.random() * 8;
-        particles.push({
-          x: cx + (Math.random() - 0.5) * 80,
-          y: cy + (Math.random() - 0.5) * 30,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          r: 1.5 + Math.random() * 2.2,
-          life: 1.0,
-          decay: 0.010 + Math.random() * 0.010,
-        });
-      }
-
-      let raf;
-      const tick = () => {
-        ctx.clearRect(0, 0, w, h);
-        let alive = 0;
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          if (p.life <= 0) continue;
-          alive++;
-          p.vy += 0.18;
-          p.x += p.vx;
-          p.y += p.vy;
-          p.life -= p.decay;
-          const a = Math.max(0, p.life) * 0.9;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(252, 211, 77, ${a})`;
-          ctx.fill();
-        }
-        if (alive > 0) raf = requestAnimationFrame(tick);
-        else ctx.clearRect(0, 0, w, h);
-      };
-      raf = requestAnimationFrame(tick);
-
-      return () => {
-        cancelAnimationFrame(raf);
-        ctx.clearRect(0, 0, w, h);
-      };
-    }, [triggerKey, count]);
-
-    return <canvas ref={canvasRef} className="burst-canvas" aria-hidden="true" />;
-  }
-
   function MarqueeBulbs({ horiz = 28, vert = 8, overloadKey = 0 }) {
     const [overloaded, setOverloaded] = useState(false);
     useEffect(() => {
@@ -2179,7 +2100,6 @@
     return (
       <div className={"app" + (shaking ? " shaking" : "") + (tickShake ? " tick-shake" : "")}>
         <DustParticles />
-        <BurstCanvas triggerKey={revealKey} />
         {revealKey > 0 && <div className="reveal-flash" key={revealKey} />}
         {showSkip && isSpinning && (
           <button className="skip-spin" onClick={handleSkip}>PASSER</button>
