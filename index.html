@@ -997,6 +997,25 @@
     cursor: pointer;
   }
   .vocab-reset:hover { background: rgba(212,175,55,0.08); }
+  .vocab-io {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .vocab-io-btn {
+    flex: 1;
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(212,175,55,0.4);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .vocab-io-btn:hover { background: rgba(212,175,55,0.1); border-color: var(--gold); }
 
   .settings-bar {
     position: fixed;
@@ -1346,6 +1365,7 @@
   function VocabEditor({ vocab, setVocab }) {
     const [tab, setTab] = useState("actions");
     const [draft, setDraft] = useState("");
+    const fileRef = useRef(null);
     const list = vocab[tab];
 
     const add = () => {
@@ -1362,6 +1382,45 @@
     const reset = () => {
       if (!confirm("Réinitialiser cette liste aux valeurs par défaut ?")) return;
       setVocab({ ...vocab, [tab]: [...DEFAULT_VOCAB[tab]] });
+    };
+
+    const exportJson = () => {
+      const blob = new Blob([JSON.stringify(vocab, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const stamp = new Date().toISOString().slice(0, 10);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `roulette-congolaise-vocab-${stamp}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    };
+
+    const importJson = (file) => {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (!parsed || typeof parsed !== "object") throw new Error("JSON invalide.");
+          const keys = ["actions", "noms", "adjectifs", "recompenses"];
+          const next = {};
+          for (const k of keys) {
+            if (!Array.isArray(parsed[k])) throw new Error(`Clé manquante ou invalide : "${k}".`);
+            const cleaned = Array.from(new Set(
+              parsed[k].map(s => typeof s === "string" ? s.trim() : "").filter(Boolean)
+            ));
+            if (cleaned.length < 2) throw new Error(`La liste "${k}" doit contenir au moins 2 entrées.`);
+            next[k] = cleaned;
+          }
+          if (!confirm("Remplacer la banque de mots actuelle par le fichier importé ?")) return;
+          setVocab(next);
+        } catch (e) {
+          alert("Import impossible : " + (e.message || "fichier illisible."));
+        }
+      };
+      reader.readAsText(file);
     };
 
     const tabs = [
@@ -1399,6 +1458,17 @@
           ))}
         </div>
         <button className="vocab-reset" onClick={reset}>↺ Réinitialiser cette liste</button>
+        <div className="vocab-io">
+          <button className="vocab-io-btn" onClick={exportJson}>↓ Exporter JSON</button>
+          <button className="vocab-io-btn" onClick={() => fileRef.current?.click()}>↑ Importer JSON</button>
+          <input ref={fileRef} type="file" accept="application/json,.json"
+                 style={{ display: "none" }}
+                 onChange={(e) => {
+                   const f = e.target.files?.[0];
+                   importJson(f);
+                   e.target.value = "";
+                 }} />
+        </div>
       </div>
     );
   }
