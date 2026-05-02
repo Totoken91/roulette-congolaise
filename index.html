@@ -194,11 +194,27 @@
       0 0 30px rgba(255, 43, 74, 0.4),
       2px 2px 0 rgba(0,0,0,0.4);
     letter-spacing: 0.01em;
-    animation: neon-flicker 4s infinite;
+    animation: neon-flicker 4s infinite, title-pulse 5s ease-in-out infinite;
   }
   @keyframes neon-flicker {
     0%, 100%, 8%, 12%, 22%, 26% { opacity: 1; }
     10%, 24% { opacity: 0.85; }
+  }
+  /* halo doré/rouge qui respire en plus du flicker (TÂCHE 4) */
+  @keyframes title-pulse {
+    0%, 100% {
+      text-shadow:
+        0 0 12px rgba(255, 43, 74, 0.8),
+        0 0 30px rgba(255, 43, 74, 0.4),
+        2px 2px 0 rgba(0,0,0,0.4);
+    }
+    50% {
+      text-shadow:
+        0 0 18px rgba(255, 43, 74, 0.9),
+        0 0 44px rgba(255, 43, 74, 0.55),
+        0 0 70px rgba(252, 211, 77, 0.25),
+        2px 2px 0 rgba(0,0,0,0.4);
+    }
   }
   .title-sub {
     font-family: 'Bebas Neue', sans-serif;
@@ -206,6 +222,29 @@
     letter-spacing: 0.4em;
     font-size: 13px;
     opacity: 0.85;
+  }
+  .title-star {
+    display: inline-block;
+    color: var(--gold-pale);
+    animation: title-star-twinkle 3s ease-in-out infinite;
+  }
+  .title-star.b { animation-delay: 1.5s; }
+  @keyframes title-star-twinkle {
+    0%, 100% { opacity: 0.55; text-shadow: none; }
+    50%      { opacity: 1;    text-shadow: 0 0 8px var(--gold-pale); }
+  }
+  /* canvas particules de poussière dorée — fixed sur le viewport */
+  .dust-particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .title { animation: none; }
+    .title-star { animation: none; opacity: 0.85; }
+    .dust-particles { display: none; }
+    .bg-stars span { animation: none; opacity: 0.5; }
   }
   .title-tag {
     font-family: 'Special Elite', monospace;
@@ -1456,6 +1495,71 @@
   // Marquise de théâtre — ampoules individuelles avec flicker décalé.
   // Counts choisis pour donner ~14-18px d'espacement à 1100px de large
   // (gap = (W - n*8) / (n-1)) ; mobile réduit la densité via media query.
+  // Poussière dorée flottante (TÂCHE 4) — canvas RAF, ~35 particules,
+  // y - vy + sin(t+phase) sur x. prefers-reduced-motion : démontage propre.
+  function DustParticles({ count = 35 }) {
+    const canvasRef = useRef(null);
+    useEffect(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      if (typeof matchMedia !== "undefined" &&
+          matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      const ctx = canvas.getContext("2d");
+      let w = 0, h = 0, dpr = 1;
+      const resize = () => {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+      };
+      resize();
+      window.addEventListener("resize", resize);
+
+      const particles = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: 0.8 + Math.random() * 1.6,
+        vy: 0.18 + Math.random() * 0.32,
+        phase: Math.random() * Math.PI * 2,
+        alpha: 0.05 + Math.random() * 0.10, // max 0.15
+      }));
+
+      let raf, t = 0;
+      const tick = () => {
+        t += 0.016;
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.y -= p.vy;
+          p.x += Math.sin(t + p.phase) * 0.18;
+          if (p.y < -10) {
+            p.y = h + 10;
+            p.x = Math.random() * w;
+          }
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(252, 211, 77, ${p.alpha})`;
+          ctx.fill();
+        }
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+
+      return () => {
+        cancelAnimationFrame(raf);
+        window.removeEventListener("resize", resize);
+      };
+    }, [count]);
+
+    return <canvas ref={canvasRef} className="dust-particles" aria-hidden="true" />;
+  }
+
   function MarqueeBulbs({ horiz = 28, vert = 8 }) {
     const row = (n) => Array.from({ length: n }, (_, i) => <span key={i} className="bulb" />);
     return (
@@ -1846,6 +1950,7 @@
 
     return (
       <div className={"app " + (shaking ? "shaking" : "")}>
+        <DustParticles />
         <div className="bg-vignette" />
         <div className="bg-stars">{Array.from({length: 60}).map((_, i) => (
           <span key={i} style={{
@@ -1863,7 +1968,10 @@
             </button>
           </div>
           <div className="title-wrap">
-            <div className="title-sub">— ★ établi 2026 ★ —</div>
+            <div className="title-sub">
+              — <span className="title-star">★</span> établi 2026{" "}
+              <span className="title-star b">★</span> —
+            </div>
             <h1 className="title">Roulette Congolaise</h1>
             <div className="title-tag">on ne peut que perdre</div>
           </div>
