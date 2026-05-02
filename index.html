@@ -96,7 +96,7 @@
     padding: 28px 40px 20px;
     gap: 24px;
   }
-  .head-left { justify-self: start; }
+  .head-left { justify-self: start; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
   .head-right { justify-self: end; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
   .player-input-wrap {
     display: flex;
@@ -1267,6 +1267,36 @@
   }
   .vocab-io-btn:hover { background: rgba(212,175,55,0.1); border-color: var(--gold); }
 
+  /* ── modale nom (gate avant spin) ──────────────────────────────────────── */
+  .name-modal { width: min(420px, 100%); }
+  .name-modal-hint {
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.8);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 14px;
+  }
+  .name-modal-input { width: 100%; }
+  .name-submit {
+    appearance: none;
+    margin-top: 14px;
+    width: 100%;
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold-deep));
+    color: var(--ink);
+    border: 0;
+    border-radius: 4px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 15px;
+    padding: 14px 24px;
+    cursor: pointer;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.55),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.45);
+  }
+  .name-submit:hover:not(:disabled) { filter: brightness(1.06); }
+  .name-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
   .settings-bar {
     position: fixed;
     bottom: 16px;
@@ -1981,6 +2011,9 @@
     const [showShame, setShowShame] = useState(false);
     const [showVocab, setShowVocab] = useState(false);
     const [showShare, setShowShare] = useState(null);
+    const [nameModalOpen, setNameModalOpen] = useState(false);
+    const [nameDraft, setNameDraft] = useState("");
+    const pendingActionRef = useRef(null);
 
     const [phase, setPhase] = useState("idle");
     const [destinA, setDestinA] = useState(null);
@@ -2004,6 +2037,27 @@
     };
     const stopDrumroll = () => {
       if (drumrollRef.current) { drumrollRef.current.stop(); drumrollRef.current = null; }
+    };
+
+    // Gate les actions qui nécessitent un nom de joueur.
+    const requireNameThen = (action) => () => {
+      if (playerName.trim()) { action(); return; }
+      setNameDraft("");
+      pendingActionRef.current = action;
+      setNameModalOpen(true);
+    };
+    const submitName = () => {
+      const v = nameDraft.trim();
+      if (!v) return;
+      setPlayerName(v);
+      setNameModalOpen(false);
+      const fn = pendingActionRef.current;
+      pendingActionRef.current = null;
+      if (fn) fn();
+    };
+    const cancelNameModal = () => {
+      pendingActionRef.current = null;
+      setNameModalOpen(false);
     };
 
     const armSkipDelay = () => {
@@ -2115,6 +2169,14 @@
 
         <header className="head">
           <div className="head-left">
+            <div className="player-input-wrap">
+              <span className="player-label">Joueur</span>
+              <input className="player-input"
+                     value={playerName}
+                     onChange={e => setPlayerName(e.target.value.slice(0, 24))}
+                     placeholder="Votre nom..."
+                     maxLength={24} />
+            </div>
             <button className="ghost-btn" onClick={() => setShowShame(true)}>
               <span className="ghost-num">{history.length}</span>
               Tableau de la honte
@@ -2132,14 +2194,6 @@
             <button className="ghost-btn" onClick={() => setShowVocab(v => !v)}>
               {showVocab ? "Fermer la banque" : "Banque de mots"}
             </button>
-            <div className="player-input-wrap">
-              <span className="player-label">Joueur</span>
-              <input className="player-input"
-                     value={playerName}
-                     onChange={e => setPlayerName(e.target.value.slice(0, 24))}
-                     placeholder="Votre nom..."
-                     maxLength={24} />
-            </div>
           </div>
         </header>
 
@@ -2172,7 +2226,7 @@
 
           {phase === "idle" && (
             <div className="cta-wrap">
-              <button className="big-spin" onClick={spinFirst}>
+              <button className="big-spin" onClick={requireNameThen(spinFirst)}>
                 <span className="big-spin-inner">TOURNER LA ROUE</span>
               </button>
               <div className="cta-warn">⚠ deux destinées vous seront proposées, l'une après l'autre. Vous devrez en choisir une. Il n'y a pas d'échappatoire.</div>
@@ -2181,7 +2235,7 @@
 
           {phase === "reveal1" && (
             <div className="cta-wrap">
-              <button className="big-spin secondary" onClick={spinSecond}>
+              <button className="big-spin secondary" onClick={requireNameThen(spinSecond)}>
                 <span className="big-spin-inner">TIRER LA 2ᵉ DESTINÉE</span>
               </button>
               <div className="cta-warn">Le sort en a décidé une. La roulette tournera encore une fois.</div>
@@ -2226,6 +2280,32 @@
                 <button className="hos-close" onClick={() => setShowVocab(false)}>×</button>
               </div>
               <VocabEditor vocab={vocab} setVocab={setVocab} />
+            </div>
+          </div>
+        )}
+
+        {nameModalOpen && (
+          <div className="vocab-overlay" onClick={cancelNameModal}>
+            <div className="vocab-modal name-modal" onClick={e => e.stopPropagation()}>
+              <div className="vocab-head">
+                <div className="vocab-title">Votre nom</div>
+                <button className="hos-close" onClick={cancelNameModal}>×</button>
+              </div>
+              <p className="name-modal-hint">
+                Avant de tourner la roue, on a besoin de savoir qui va se prendre la destinée.
+              </p>
+              <input className="vocab-input name-modal-input"
+                     autoFocus
+                     value={nameDraft}
+                     onChange={e => setNameDraft(e.target.value.slice(0, 24))}
+                     onKeyDown={e => e.key === "Enter" && submitName()}
+                     placeholder="Votre nom..."
+                     maxLength={24} />
+              <button className="name-submit"
+                      onClick={submitName}
+                      disabled={!nameDraft.trim()}>
+                Valider et tourner
+              </button>
             </div>
           </div>
         )}
