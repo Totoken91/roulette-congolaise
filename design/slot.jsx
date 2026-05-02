@@ -58,8 +58,10 @@ function SlotColumn({ items, target, spinning, spinKey, durationMs, onTick, onLa
     return () => cancelAnimationFrame(raf);
   }, [spinKey]);
 
-  // construire 3 copies pour l'effet boucle
-  const repeated = useMemo(() => [...items, ...items, ...items, ...items, ...items], [items]);
+  // Au moins floor(totalRotations)_max + 3 copies pour que la viewport reste
+  // remplie pendant tout le défilement (sinon la colonne se vide juste avant
+  // le snap final).
+  const repeated = useMemo(() => Array.from({ length: 8 }, () => items).flat(), [items]);
 
   return (
     <div className="slot-col" style={{ "--accent": accent }}>
