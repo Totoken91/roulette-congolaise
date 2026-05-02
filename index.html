@@ -709,7 +709,7 @@
     background:
       linear-gradient(135deg, var(--ivory) 0%, var(--cream) 100%);
     color: var(--ink);
-    padding: 32px 32px 24px;
+    padding: 32px 26px 24px;
     border-radius: 6px;
     box-shadow:
       0 0 0 2px var(--gold),
@@ -749,59 +749,55 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     margin: 4px 0 14px;
-    width: 100%;
   }
-  /* niveau 1 — mots tirés (action / nom / adj / récompense) :
-     même style serif italique 700 burgundy-deep, hiérarchie subtile par taille */
-  .destin-word {
+  .destin-prefix {
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    color: rgba(26, 14, 8, 0.55);
+    letter-spacing: 0.08em;
+    margin: 2px 0;
+  }
+  .destin-action {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(22px, 2.4vw, 32px);
+    color: var(--copper);
+    line-height: 1;
+  }
+  .destin-nom {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(20px, 2vw, 26px);
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    text-transform: uppercase;
+    line-height: 1.05;
+  }
+  .destin-adj {
+    font-family: 'Special Elite', monospace;
+    font-size: clamp(13px, 1.2vw, 15px);
+    color: rgba(26, 14, 8, 0.75);
+    letter-spacing: 0.04em;
+  }
+  .destin-divider {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--gold-deep);
+    margin: 10px 0 4px;
+  }
+  .destin-reward {
     font-family: 'Playfair Display', serif;
     font-style: italic;
     font-weight: 700;
-    color: #2a0a0f;
-    line-height: 1.15;
-    text-align: center;
-    /* base = adjectif + récompense */
-    font-size: clamp(17px, 1.7vw, 21px);
-  }
-  .destin-word.action { font-size: clamp(22px, 2.4vw, 30px); }  /* ~1.3em */
-  .destin-word.nom    { font-size: clamp(19px, 2.0vw, 25px); }  /* ~1.15em */
-
-  /* niveau 2 — mots de liaison (Se faire / par / pour) */
-  .destin-link {
-    font-family: 'Bebas Neue', sans-serif;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    font-size: clamp(11px, 0.85vw, 13px);
-    color: #8a6f4a;
-  }
-  /* séparateur POUR : trait doré horizontal + mot centré */
-  .destin-pour-sep {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-    margin: 8px 0 4px;
-  }
-  .destin-pour-sep::before, .destin-pour-sep::after {
-    content: "";
-    flex: 0 0 auto;
-    width: 9%;
-    min-width: 36px;
-    max-width: 70px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #c9a44a 35%, #c9a44a 65%, transparent);
-  }
-  .destin-pour-sep > span {
-    font-family: 'Bebas Neue', sans-serif;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    font-size: clamp(11px, 0.85vw, 13px);
-    color: #8a6f4a;
+    font-size: clamp(15px, 1.4vw, 18px);
+    color: #2d6a4f;
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: rgba(45, 106, 79, 0.5);
+    text-underline-offset: 6px;
   }
   .destin-pick {
     appearance: none;
@@ -1922,13 +1918,13 @@
         <div className="destin-corner tl">{side === "left" ? "A" : "B"}</div>
         <div className="destin-corner br">{side === "left" ? "A" : "B"}</div>
         <div className="destin-text">
-          <span className="destin-link">Se faire</span>
-          <span className="destin-word action">{destin.action}</span>
-          <span className="destin-link">par</span>
-          <span className="destin-word nom">{destin.nom}</span>
-          <span className="destin-word">{destin.adjectif}</span>
-          <div className="destin-pour-sep" aria-hidden="true"><span>POUR</span></div>
-          <span className="destin-word">{destin.recompense}</span>
+          <span className="destin-prefix">Se faire</span>
+          <span className="destin-action">{destin.action}</span>
+          <span className="destin-prefix">par</span>
+          <span className="destin-nom">{destin.nom}</span>
+          <span className="destin-adj">{destin.adjectif}</span>
+          <div className="destin-divider">⸺ pour ⸺</div>
+          <span className="destin-reward">{destin.recompense}</span>
         </div>
         <button className={"destin-pick " + side} onClick={onPick} disabled={disabled}>
           Je choisis {side === "left" ? "A" : "B"}
