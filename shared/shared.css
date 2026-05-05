@@ -1,0 +1,139 @@
+/* shared.css — palette, typo, particules, modale nom.
+   Chargé par chaque page (hub, roulette, fmk). */
+
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Special+Elite&family=DM+Mono:wght@400;500&display=swap");
+
+:root {
+  --bg-deep:    #1a0808;
+  --bg-velvet:  #5a0d1a;
+  --bg-velvet2: #7a1224;
+  --gold:       #d4af37;
+  --gold-pale:  #f0c987;
+  --gold-deep:  #8c6a14;
+  --neon-red:   #ff2b4a;
+  --neon-rose:  #ff6b8a;
+  --cream:      #f5e9d0;
+  --ivory:      #faf2dd;
+  --ink:        #1a0e08;
+  --copper:     #c14b4b;
+  --blood:      #8b0a14;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: var(--bg-deep);
+  color: var(--ivory);
+  font-family: 'Playfair Display', serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── poussière dorée flottante (canvas full viewport) ─────────────────── */
+.dust-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── modale "Votre nom" partagée (NameGate) ──────────────────────────── */
+.name-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  animation: name-fade-in 0.2s;
+}
+.name-card {
+  background: radial-gradient(ellipse at top, #2a0810, var(--bg-deep));
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 28px 24px;
+  width: min(420px, 100%);
+  display: flex; flex-direction: column;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.6),
+    0 0 0 4px var(--bg-deep),
+    0 0 0 6px var(--gold-deep);
+  animation: name-slam-in 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+.name-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+}
+.name-card-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 28px;
+  color: var(--gold-pale);
+  line-height: 1;
+}
+.name-card-close {
+  appearance: none;
+  background: transparent;
+  border: 1.5px solid var(--gold);
+  color: var(--gold-pale);
+  font-size: 22px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  line-height: 1;
+}
+.name-card-close:hover { background: rgba(212, 175, 55, 0.15); }
+.name-hint {
+  font-family: 'Special Elite', monospace;
+  color: rgba(245, 233, 208, 0.8);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+.name-input {
+  appearance: none;
+  width: 100%;
+  background: rgba(245, 233, 208, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 3px;
+  color: var(--ivory);
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  padding: 10px 12px;
+  outline: none;
+}
+.name-input:focus { border-color: var(--gold); background: rgba(245, 233, 208, 0.08); }
+.name-submit {
+  appearance: none;
+  margin-top: 14px;
+  width: 100%;
+  background: linear-gradient(180deg, var(--gold-pale), var(--gold-deep));
+  color: var(--ink);
+  border: 0;
+  border-radius: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.18em;
+  font-size: 15px;
+  padding: 14px 24px;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 216, 0.55),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.45);
+}
+.name-submit:hover:not(:disabled) { filter: brightness(1.06); }
+.name-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@keyframes name-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes name-slam-in {
+  0%   { transform: scale(0.5) rotate(-6deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dust-particles { display: none; }
+  .name-overlay, .name-card { animation: none; }
+}
