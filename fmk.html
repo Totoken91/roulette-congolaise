@@ -814,37 +814,37 @@
     "Jamel Debbouze", "Alain Delon", "Bernard-Henri Lévy",
   ];
 
-  const FMK_BEAUFS = [
-    "Tonton René qui parle de crypto au repas",
-    "Le collègue qui mâche fort",
-    "La belle-mère qui critique ta cuisine",
-    "Le voisin qui tond à 7h le dimanche",
-    "Le pote qui pisse sur l'autoroute",
-    "L'oncle vegan tatoueur amateur",
-    "Le chauffeur Uber qui parle politique",
-    "Le commercial qui te tutoie d'office",
-    "Le client roi qui veut le manager",
-    "Le mec qui sort sa carte black au resto",
-    "Le grand-père qui dit \"à mon époque\"",
-    "Le coach perso à 25€/heure",
-    "Le conférencier LinkedIn",
-    "Le millennial parent qui montre ses gosses",
-    "Le geek 35 ans collectionneur de Funko Pop",
-    "Le mec qui dit \"c'est ironique\"",
-    "Le sénior qui paye en chèque",
-    "Le bobo bio à vélo cargo",
-    "L'agent immobilier qui dit \"atypique\"",
-    "Le fan d'OM en peignoir",
-    "Le pote qui parle vin sans rien savoir",
-    "Le mec qui ramène sa cigarette au resto",
-    "Le marié qui drague les témoins",
-    "Le voisin de plage qui hurle au foot",
-    "Le DRH qui te tape l'épaule",
-    "La nana qui crie devant Bachelor",
-    "Le mec en kilt sur la photo de profil",
-    "Le beauf en chemise hawaïenne au mariage",
-    "Le serveur qui touche ton épaule en récitant les plats",
-    "Le pote qui boit pas mais qui fume",
+  const FMK_DILEMMES = [
+    "un homme musclé mais avec un vagin",
+    "une femme magnifique mais avec un pénis",
+    "une personne non-binaire ultra séduisante",
+    "un mannequin mais qui sent le fromage affiné",
+    "un acteur sublime mais qui parle comme un bébé",
+    "un beau gosse mais à voix de Mickey",
+    "une bombe sexuelle mais qui rit comme une hyène",
+    "parfait·e mais avec une haleine de chien crevé",
+    "ton crush du lycée mais membre de la scientologie",
+    "génial·e au lit mais ronfle comme un Boeing",
+    "brillant·e mais collectionne les ongles coupés",
+    "drôle mais persuadé·e que la Terre est plate",
+    "très attirant·e mais ne se douche que le mardi",
+    "magnifique mais parle uniquement aux pigeons",
+    "parfait·e mais ne pose jamais le smartphone",
+    "très beau·belle mais 35 ans et habite chez sa mère",
+    "canon mais raconte sa journée en détail à chaque dîner",
+    "sublime mais a peur des pâtes",
+    "envoûtant·e mais c'est ton ex",
+    "ultra sexy mais pleure pendant l'orgasme",
+    "la personne idéale mais marié·e à ta meilleure amie",
+    "ton boss un soir où il/elle a trop bu",
+    "ton thérapeute juste à la sortie du cabinet",
+    "ton voisin du dessus, mystérieux et insomniaque",
+    "un inconnu rencontré dans le train de nuit",
+    "canon mais croit aux licornes interdimensionnelles",
+    "bombe atomique mais ne parle que de complots",
+    "parfait·e mais te déteste violemment",
+    "magnifique mais a un perroquet qui hurle 24h/24",
+    "ton crush mais ne sait même pas que tu existes",
   ];
 
   const POOL_KEY = "fmk_custom_pool";
@@ -858,12 +858,12 @@
   function buildPool(mode, custom) {
     if (mode === "custom") return custom;
     if (mode === "celebs") return FMK_CELEBS.map(n => entityFromPreset(n, "celebs"));
-    if (mode === "beaufs") return FMK_BEAUFS.map(n => entityFromPreset(n, "beaufs"));
+    if (mode === "dilemmes") return FMK_DILEMMES.map(n => entityFromPreset(n, "dilemmes"));
     if (mode === "mix") {
       return [
         ...custom,
         ...FMK_CELEBS.map(n => entityFromPreset(n, "celebs")),
-        ...FMK_BEAUFS.map(n => entityFromPreset(n, "beaufs")),
+        ...FMK_DILEMMES.map(n => entityFromPreset(n, "dilemmes")),
       ];
     }
     return [];
@@ -897,7 +897,7 @@
     // rotation aléatoire stable par carte (recalculée seulement si verdict change)
     const stampRot = useMemo(() => (Math.random() * 24 - 12), [verdict, entity.id]);
     const stampLabels = { fuck: "FUCK", marry: "MARRY", kill: "KILL" };
-    const sourceLabel = { custom: "Custom", celebs: "Célébs FR", beaufs: "Beaufs" };
+    const sourceLabel = { custom: "Custom", celebs: "Célébs FR", dilemmes: "Dilemmes" };
     return (
       <div className="fmk-card" style={{ animationDelay: index * 200 + "ms" }}>
         <div className="fmk-card-image">
@@ -936,7 +936,7 @@
     const opts = [
       { k: "custom", l: "Custom" },
       { k: "celebs", l: "Célébs FR" },
-      { k: "beaufs", l: "Beaufs" },
+      { k: "dilemmes", l: "Dilemmes" },
       { k: "mix",    l: "Mix" },
     ];
     return (
@@ -1111,7 +1111,13 @@
     // Pools
     const [customPool, setCustomPoolState] = useState(() => storage.get(POOL_KEY, []));
     const setCustomPool = (p) => { setCustomPoolState(p); storage.set(POOL_KEY, p); };
-    const [mode, setMode] = useState(() => storage.getStr(ACTIVE_KEY, "celebs"));
+    // Coerce silencieuse : "beaufs" (ancien preset retiré) → "dilemmes" pour
+    // ne pas casser les utilisateurs qui avaient sélectionné cette section.
+    const [mode, setMode] = useState(() => {
+      const v = storage.getStr(ACTIVE_KEY, "celebs");
+      if (v === "beaufs") return "dilemmes";
+      return ["custom", "celebs", "dilemmes", "mix"].includes(v) ? v : "celebs";
+    });
     useEffect(() => { storage.setStr(ACTIVE_KEY, mode); }, [mode]);
 
     // Settings
