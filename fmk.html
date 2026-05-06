@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Fuck Marry Kill — Le Cercle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="shared/shared.css" />
+
+<style>
+  body { overflow-x: hidden; }
+
+  .fmk {
+    min-height: 100vh;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 50% 0%, var(--bg-velvet2) 0%, var(--bg-velvet) 35%, var(--bg-deep) 75%),
+      var(--bg-deep);
+    overflow: hidden;
+  }
+
+  /* ── header ─────────────────────────────────────────────────────────── */
+  .fmk-head {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 28px 40px 20px;
+    gap: 24px;
+  }
+  .fmk-nav { justify-self: start; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .fmk-nav-right { justify-self: end; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+
+  .fmk-back, .fmk-history-btn, .fmk-edit-btn {
+    appearance: none;
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.12em;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .fmk-back:hover, .fmk-history-btn:hover, .fmk-edit-btn:hover {
+    background: rgba(212,175,55,0.1);
+    color: var(--gold-pale);
+  }
+  .fmk-history-num {
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+
+  .fmk-title-wrap { text-align: center; line-height: 1; }
+  .fmk-title-sub {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--gold);
+    letter-spacing: 0.4em;
+    font-size: 13px;
+    opacity: 0.85;
+  }
+  .fmk-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(38px, 5.5vw, 64px);
+    margin: 4px 0;
+    color: var(--gold-pale);
+    text-shadow:
+      0 0 12px rgba(255, 107, 138, 0.6),
+      0 0 30px rgba(255, 107, 138, 0.3),
+      2px 2px 0 rgba(0,0,0,0.4);
+    letter-spacing: 0.01em;
+  }
+  .fmk-tag {
+    font-family: 'Special Elite', monospace;
+    color: var(--neon-rose);
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    margin-top: 2px;
+  }
+
+  .player-input-wrap {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 4px 4px 12px;
+    border: 1.5px solid var(--gold);
+    border-radius: 2px;
+    background: rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .player-input-wrap::before, .player-input-wrap::after {
+    content: ""; position: absolute;
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+  .player-input-wrap::before { top: -3px; left: -3px; }
+  .player-input-wrap::after { bottom: -3px; right: -3px; }
+  .player-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px; letter-spacing: 0.18em;
+    color: var(--gold-pale);
+  }
+  .player-input {
+    appearance: none;
+    background: transparent; border: 0;
+    border-left: 1px solid rgba(212,175,55,0.4);
+    color: var(--ivory);
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    padding: 6px 10px;
+    outline: none;
+    width: 150px;
+    letter-spacing: 0.04em;
+  }
+  .player-input::placeholder { color: rgba(245,233,208,0.4); }
+
+  /* ── stage ──────────────────────────────────────────────────────────── */
+  .fmk-stage {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 8px 32px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  /* ── pool switcher ──────────────────────────────────────────────────── */
+  .pool-switcher {
+    display: flex;
+    gap: 6px;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 999px;
+  }
+  .pool-pill {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: rgba(245, 233, 208, 0.7);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .pool-pill:hover { color: var(--gold-pale); }
+  .pool-pill.active {
+    background: linear-gradient(180deg, var(--copper) 0%, #7a1224 100%);
+    color: var(--ivory);
+    box-shadow: 0 0 0 1px var(--gold) inset;
+  }
+
+  /* ── CTA principal ──────────────────────────────────────────────────── */
+  .fmk-cta-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 40px 0 20px;
+  }
+  .fmk-warn {
+    font-family: 'Special Elite', monospace;
+    color: rgba(255, 107, 138, 0.85);
+    font-size: 13px;
+    text-align: center;
+    max-width: 520px;
+    letter-spacing: 0.04em;
+    padding: 10px 16px;
+    border: 1px dashed rgba(255, 107, 138, 0.4);
+    border-radius: 4px;
+  }
+  .fmk-cta {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    position: relative;
+    padding: 6px;
+    background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 50%, var(--gold-deep) 100%);
+    border-radius: 999px;
+    box-shadow:
+      0 0 0 3px var(--bg-deep),
+      0 0 0 5px var(--gold),
+      0 12px 36px rgba(255, 107, 138, 0.5),
+      0 0 56px rgba(255, 107, 138, 0.3);
+    overflow: hidden;
+  }
+  .fmk-cta:hover:not(:disabled) { transform: scale(1.04); filter: brightness(1.05); }
+  .fmk-cta:active:not(:disabled) { transform: scale(0.97); }
+  .fmk-cta:disabled { cursor: not-allowed; filter: saturate(0.4) brightness(0.7); }
+  .fmk-cta-inner {
+    display: block;
+    background: radial-gradient(circle at 30% 30%, var(--copper) 0%, #5a0d1a 70%);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 24px;
+    padding: 22px 56px;
+    border-radius: 999px;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.6);
+    border: 2px solid var(--gold);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.55),
+      inset 0 -2px 6px rgba(0, 0, 0, 0.55);
+  }
+
+  /* ── trio de cartes ─────────────────────────────────────────────────── */
+  .fmk-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+  }
+  .fmk-card {
+    position: relative;
+    background: linear-gradient(135deg, var(--ivory) 0%, var(--cream) 100%);
+    color: var(--ink);
+    padding: 28px 22px 22px;
+    border-radius: 6px;
+    box-shadow:
+      0 0 0 2px var(--gold),
+      0 0 0 5px var(--bg-deep),
+      0 0 0 7px var(--gold-deep),
+      0 18px 40px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    overflow: hidden;
+    animation: fmk-flip-in 0.55s cubic-bezier(.34,1.56,.64,1) backwards;
+    transform-style: preserve-3d;
+  }
+  .fmk-card::before {
+    content: ""; position: absolute; inset: 8px;
+    border: 1px dashed rgba(140, 106, 20, 0.35);
+    border-radius: 3px;
+    pointer-events: none;
+  }
+  @keyframes fmk-flip-in {
+    0%   { transform: rotateY(180deg) scale(0.85); opacity: 0; }
+    60%  { opacity: 1; }
+    100% { transform: rotateY(0) scale(1); opacity: 1; }
+  }
+
+  .fmk-card-image {
+    width: 100%;
+    aspect-ratio: 1;
+    max-height: 220px;
+    background: rgba(140, 106, 20, 0.08);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .fmk-card-image img { width: 100%; height: 100%; object-fit: cover; }
+  .fmk-silhouette {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(140, 106, 20, 0.45);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(60px, 10vw, 120px);
+  }
+
+  .fmk-card-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(18px, 1.8vw, 22px);
+    color: #2a0a0f;
+    line-height: 1.15;
+    min-height: 2.4em;
+    display: flex;
+    align-items: center;
+  }
+  .fmk-card-source {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-top: -6px;
+  }
+
+  /* ── verdict buttons ────────────────────────────────────────────────── */
+  .fmk-card-verdicts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    width: 100%;
+    margin-top: auto;
+  }
+  .verdict-btn {
+    appearance: none;
+    border: 1.5px solid var(--gold-deep);
+    background: rgba(245, 233, 208, 0.6);
+    color: var(--ink);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    padding: 10px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: transform 0.08s, box-shadow 0.08s, background 0.12s;
+  }
+  .verdict-icon { font-size: 18px; line-height: 1; }
+  .verdict-label { font-weight: 700; }
+
+  .verdict-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+  }
+  .verdict-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .verdict-btn.verdict-fuck:hover:not(:disabled) {
+    background: rgba(255, 107, 138, 0.18);
+    border-color: var(--neon-rose);
+    color: var(--neon-rose);
+  }
+  .verdict-btn.verdict-marry:hover:not(:disabled) {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: var(--gold);
+    color: var(--gold-deep);
+  }
+  .verdict-btn.verdict-kill:hover:not(:disabled) {
+    background: rgba(139, 10, 20, 0.15);
+    border-color: var(--blood);
+    color: var(--blood);
+  }
+  .verdict-btn.selected.verdict-fuck { background: var(--neon-rose); color: white; border-color: var(--neon-rose); }
+  .verdict-btn.selected.verdict-marry { background: var(--gold); color: var(--ink); border-color: var(--gold-pale); }
+  .verdict-btn.selected.verdict-kill { background: var(--blood); color: var(--ivory); border-color: var(--blood); }
+
+  /* ── tampons ────────────────────────────────────────────────────────── */
+  .fmk-stamp {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Special Elite', monospace;
+    font-size: clamp(40px, 6vw, 68px);
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transform: scale(2.5) rotate(var(--stamp-rot, 0deg));
+    mix-blend-mode: multiply;
+    animation: fmk-stamp-in 240ms ease-out forwards;
+  }
+  .fmk-stamp-fuck  { color: var(--neon-rose); }
+  .fmk-stamp-marry { color: var(--gold-deep); }
+  .fmk-stamp-kill  { color: var(--blood); }
+  @keyframes fmk-stamp-in {
+    0%   { opacity: 0; transform: scale(2.5) rotate(var(--stamp-rot, 0deg)); }
+    60%  { opacity: 1; transform: scale(0.92) rotate(var(--stamp-rot, 0deg)); }
+    100% { opacity: 0.85; transform: scale(1) rotate(var(--stamp-rot, 0deg)); }
+  }
+
+  /* ── actions du trio complet ────────────────────────────────────────── */
+  .fmk-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 12px 0;
+  }
+  .fmk-action {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 16px;
+    padding: 14px 28px;
+    border-radius: 4px;
+  }
+  .fmk-action.fmk-redo {
+    background: transparent;
+    border: 1.5px solid rgba(212, 175, 55, 0.5);
+    color: var(--gold-pale);
+  }
+  .fmk-action.fmk-redo:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
+  .fmk-action.fmk-assume {
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold-deep));
+    color: var(--ink);
+    border: 2px solid var(--gold);
+    font-weight: 700;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.55),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.45),
+      0 6px 20px rgba(212, 175, 55, 0.4);
+  }
+  .fmk-action.fmk-assume:hover { filter: brightness(1.06); transform: translateY(-1px); }
+
+  /* ── écran résultat ─────────────────────────────────────────────────── */
+  .fmk-result {
+    position: relative;
+    background: linear-gradient(135deg, var(--ivory) 0%, var(--cream) 100%);
+    color: var(--ink);
+    padding: 36px 32px 28px;
+    border-radius: 8px;
+    width: min(640px, 100%);
+    box-shadow:
+      0 0 0 2px var(--gold),
+      0 0 0 5px var(--bg-deep),
+      0 0 0 7px var(--gold-deep),
+      0 24px 60px rgba(0,0,0,0.6);
+    text-align: center;
+  }
+  .fmk-result-stamp {
+    font-family: 'Special Elite', monospace;
+    color: var(--blood);
+    font-size: 16px;
+    letter-spacing: 0.4em;
+    border: 2px solid var(--blood);
+    display: inline-block;
+    padding: 6px 16px;
+    transform: rotate(-2deg);
+    margin-bottom: 18px;
+    opacity: 0.85;
+  }
+  .fmk-result-text {
+    font-family: 'Special Elite', monospace;
+    color: rgba(26, 14, 8, 0.78);
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+  .fmk-result-list { list-style: none; padding: 0; margin: 0 0 24px; display: flex; flex-direction: column; gap: 10px; }
+  .fmk-result-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(15px, 1.5vw, 18px);
+    font-style: italic;
+    font-weight: 700;
+    background: rgba(140, 106, 20, 0.06);
+    border-left: 4px solid;
+  }
+  .fmk-result-row.fmk-result-fuck  { border-color: var(--neon-rose); }
+  .fmk-result-row.fmk-result-marry { border-color: var(--gold); }
+  .fmk-result-row.fmk-result-kill  { border-color: var(--blood); }
+  .fmk-result-name { color: #2a0a0f; }
+  .fmk-result-arrow { color: var(--gold-deep); }
+  .fmk-result-verdict {
+    font-family: 'Bebas Neue', sans-serif;
+    font-style: normal;
+    letter-spacing: 0.12em;
+    padding: 4px 10px;
+    border-radius: 3px;
+    color: var(--ivory);
+    font-size: 14px;
+  }
+  .fmk-result-row.fmk-result-fuck  .fmk-result-verdict { background: var(--neon-rose); }
+  .fmk-result-row.fmk-result-marry .fmk-result-verdict { background: var(--gold-deep); }
+  .fmk-result-row.fmk-result-kill  .fmk-result-verdict { background: var(--blood); }
+
+  .fmk-result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .fmk-result-btn {
+    appearance: none;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 4px;
+    text-decoration: none;
+    background: linear-gradient(180deg, var(--copper) 0%, #7a1224 100%);
+    color: var(--ivory);
+    border: 2px solid var(--gold);
+  }
+  .fmk-result-btn.secondary {
+    background: transparent;
+    color: var(--gold-deep);
+    border-color: var(--gold-deep);
+  }
+  .fmk-result-btn:hover:not(.secondary) { filter: brightness(1.06); }
+
+  /* ── modale "Pool Custom" + "Registre" (réutilise vocab-overlay) ─── */
+  .vocab-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    animation: fmk-fade-in 0.2s;
+  }
+  @keyframes fmk-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .vocab-modal {
+    background: radial-gradient(ellipse at top, #2a0810, var(--bg-deep));
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    padding: 28px 24px;
+    width: min(640px, 100%);
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 4px var(--bg-deep), 0 0 0 6px var(--gold-deep);
+  }
+  .vocab-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  }
+  .vocab-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: 28px;
+    color: var(--gold-pale);
+    line-height: 1;
+  }
+  .hos-close {
+    appearance: none;
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold-pale);
+    font-size: 22px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .hos-close:hover { background: rgba(212, 175, 55, 0.15); }
+
+  /* ── EntityEditor ──────────────────────────────────────────────────── */
+  .entity-editor { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+  .ee-add { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; }
+  .ee-input {
+    appearance: none;
+    background: rgba(245,233,208,0.05);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 3px;
+    color: var(--ivory);
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    outline: none;
+  }
+  .ee-input:focus { border-color: var(--gold); background: rgba(245,233,208,0.08); }
+  .ee-add-btn {
+    appearance: none;
+    width: 40px;
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold-deep));
+    color: var(--ink);
+    border: 0;
+    border-radius: 3px;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .ee-add-btn:hover:not(:disabled) { filter: brightness(1.1); }
+  .ee-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .ee-list {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-height: 100px;
+    max-height: 360px;
+    padding: 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+    border: 1px solid rgba(212,175,55,0.15);
+  }
+  .ee-list::-webkit-scrollbar { width: 8px; }
+  .ee-list::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 4px; }
+  .ee-empty {
+    text-align: center;
+    font-family: 'Special Elite', monospace;
+    color: rgba(245,233,208,0.5);
+    padding: 36px 20px;
+    font-size: 13px;
+  }
+  .ee-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px 6px 10px;
+    background: rgba(245,233,208,0.05);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 3px;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--ivory);
+  }
+  .ee-thumb {
+    width: 28px; height: 28px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid rgba(212,175,55,0.4);
+    flex-shrink: 0;
+  }
+  .ee-name { flex: 1; }
+  .ee-remove {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: rgba(255,107,138,0.7);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .ee-remove:hover { background: rgba(255,107,138,0.2); color: var(--neon-rose); }
+  .ee-io { display: flex; gap: 8px; }
+  .ee-io-btn {
+    flex: 1;
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(212,175,55,0.4);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .ee-io-btn:hover:not(:disabled) { background: rgba(212,175,55,0.1); border-color: var(--gold); }
+  .ee-io-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── Registre (réutilise hos-* style) ──────────────────────────────── */
+  .reg-list {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 4px;
+    min-height: 0;
+  }
+  .reg-list::-webkit-scrollbar { width: 8px; }
+  .reg-list::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 4px; }
+  .reg-empty {
+    text-align: center;
+    font-family: 'Special Elite', monospace;
+    color: rgba(245,233,208,0.5);
+    padding: 36px 20px;
+  }
+  .reg-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(245, 233, 208, 0.05);
+    border-left: 3px solid var(--gold-deep);
+    border-radius: 2px;
+  }
+  .reg-num {
+    font-family: 'DM Mono', monospace;
+    color: var(--gold);
+    font-size: 13px;
+    flex-shrink: 0;
+    width: 38px;
+  }
+  .reg-text {
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    color: var(--ivory);
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .reg-text > b { color: var(--gold-pale); font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; }
+  .reg-verdict {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-right: 6px;
+    margin-top: 2px;
+    border-radius: 2px;
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+  }
+  .reg-verdict.reg-verdict-fuck  { background: rgba(255,107,138,0.18); color: var(--neon-rose); border: 1px solid rgba(255,107,138,0.4); }
+  .reg-verdict.reg-verdict-marry { background: rgba(212,175,55,0.18);  color: var(--gold-pale); border: 1px solid rgba(212,175,55,0.5); }
+  .reg-verdict.reg-verdict-kill  { background: rgba(139,10,20,0.25);   color: #ff8d8d;          border: 1px solid rgba(139,10,20,0.55); }
+  .hos-clear {
+    appearance: none;
+    margin-top: 14px;
+    background: transparent;
+    border: 1px solid rgba(255,107,138,0.4);
+    color: var(--neon-rose);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.12em;
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .hos-clear:hover { background: rgba(255,107,138,0.1); }
+
+  /* ── settings bar (sound toggle minimal) ───────────────────────────── */
+  .settings-bar {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 50;
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 999px;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--gold-pale);
+    align-items: center;
+  }
+  .sb-toggle {
+    appearance: none;
+    background: rgba(212,175,55,0.1);
+    color: var(--gold-pale);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 999px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+  .sb-toggle.on { background: rgba(255,107,138,0.25); border-color: var(--neon-rose); color: var(--neon-rose); }
+
+  /* ── footer ────────────────────────────────────────────────────────── */
+  .fmk-foot {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 14px 20px 22px;
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    color: rgba(245, 233, 208, 0.45);
+    letter-spacing: 0.12em;
+  }
+
+  /* ── responsive ────────────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .fmk-cards { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+    .fmk-head { grid-template-columns: 1fr; gap: 14px; padding: 18px 16px 12px; }
+    .fmk-nav, .fmk-nav-right { justify-self: center; align-items: center; }
+    .fmk-stage { padding: 8px 14px 60px; }
+    .ee-add { grid-template-columns: 1fr auto; }
+    .ee-add .ee-img { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fmk-card { animation: none; }
+    .fmk-stamp { animation: none; opacity: 0.85; transform: scale(1) rotate(var(--stamp-rot, 0deg)); }
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script type="text/babel" data-presets="react" src="shared/shared.js"></script>
+
+  <script type="text/babel" data-presets="react">
+  const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+  // ── presets ──────────────────────────────────────────────────────────
+  const FMK_CELEBS = [
+    "Emmanuel Macron", "Marine Le Pen", "Jean-Luc Mélenchon",
+    "Cyril Hanouna", "Patrick Sébastien", "Michel Sardou",
+    "Nabilla", "Booba", "Aya Nakamura",
+    "Eric Zemmour", "Jean-Marie Bigard", "Karine Le Marchand",
+    "Stéphane Plaza", "Jean-Pierre Pernaut", "Élise Lucet",
+    "Gérard Depardieu", "Catherine Deneuve", "Brigitte Bardot",
+    "Patrick Bruel", "Christophe Maé", "Norman Thavaud",
+    "Cyprien", "Squeezie", "Vincent Cassel",
+    "Marion Cotillard", "Florent Pagny", "Renaud",
+    "Jamel Debbouze", "Alain Delon", "Bernard-Henri Lévy",
+  ];
+
+  const FMK_BEAUFS = [
+    "Tonton René qui parle de crypto au repas",
+    "Le collègue qui mâche fort",
+    "La belle-mère qui critique ta cuisine",
+    "Le voisin qui tond à 7h le dimanche",
+    "Le pote qui pisse sur l'autoroute",
+    "L'oncle vegan tatoueur amateur",
+    "Le chauffeur Uber qui parle politique",
+    "Le commercial qui te tutoie d'office",
+    "Le client roi qui veut le manager",
+    "Le mec qui sort sa carte black au resto",
+    "Le grand-père qui dit \"à mon époque\"",
+    "Le coach perso à 25€/heure",
+    "Le conférencier LinkedIn",
+    "Le millennial parent qui montre ses gosses",
+    "Le geek 35 ans collectionneur de Funko Pop",
+    "Le mec qui dit \"c'est ironique\"",
+    "Le sénior qui paye en chèque",
+    "Le bobo bio à vélo cargo",
+    "L'agent immobilier qui dit \"atypique\"",
+    "Le fan d'OM en peignoir",
+    "Le pote qui parle vin sans rien savoir",
+    "Le mec qui ramène sa cigarette au resto",
+    "Le marié qui drague les témoins",
+    "Le voisin de plage qui hurle au foot",
+    "Le DRH qui te tape l'épaule",
+    "La nana qui crie devant Bachelor",
+    "Le mec en kilt sur la photo de profil",
+    "Le beauf en chemise hawaïenne au mariage",
+    "Le serveur qui touche ton épaule en récitant les plats",
+    "Le pote qui boit pas mais qui fume",
+  ];
+
+  const POOL_KEY = "fmk_custom_pool";
+  const ACTIVE_KEY = "fmk_active_pool";
+  const SETTINGS_KEY = "fmk_settings_v1";
+  const NAME_KEY = "rc_name_v1"; // partagé avec Roulette pour fluidité
+
+  function entityFromPreset(name, source) {
+    return { id: source + ":" + name, name, image: null, source };
+  }
+  function buildPool(mode, custom) {
+    if (mode === "custom") return custom;
+    if (mode === "celebs") return FMK_CELEBS.map(n => entityFromPreset(n, "celebs"));
+    if (mode === "beaufs") return FMK_BEAUFS.map(n => entityFromPreset(n, "beaufs"));
+    if (mode === "mix") {
+      return [
+        ...custom,
+        ...FMK_CELEBS.map(n => entityFromPreset(n, "celebs")),
+        ...FMK_BEAUFS.map(n => entityFromPreset(n, "beaufs")),
+      ];
+    }
+    return [];
+  }
+  function drawTrio(pool) {
+    if (!pool || pool.length < 3) return null;
+    const arr = [...pool];
+    for (let i = 0; i < 3; i++) {
+      const j = i + Math.floor(Math.random() * (arr.length - i));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr.slice(0, 3);
+  }
+
+  // ── VerdictButton ────────────────────────────────────────────────────
+  function VerdictButton({ kind, icon, label, selected, disabled, onClick }) {
+    const cls = "verdict-btn verdict-" + kind + (selected ? " selected" : "");
+    return (
+      <button type="button" className={cls}
+              onClick={onClick}
+              disabled={disabled || selected}
+              aria-label={label}>
+        <span className="verdict-icon">{icon}</span>
+        <span className="verdict-label">{label}</span>
+      </button>
+    );
+  }
+
+  // ── FMKCard ──────────────────────────────────────────────────────────
+  function FMKCard({ entity, index, verdict, takenVerdicts, onAssign, locked }) {
+    // rotation aléatoire stable par carte (recalculée seulement si verdict change)
+    const stampRot = useMemo(() => (Math.random() * 24 - 12), [verdict, entity.id]);
+    const stampLabels = { fuck: "FUCK", marry: "MARRY", kill: "KILL" };
+    const sourceLabel = { custom: "Custom", celebs: "Célébs FR", beaufs: "Beaufs" };
+    return (
+      <div className="fmk-card" style={{ animationDelay: index * 200 + "ms" }}>
+        <div className="fmk-card-image">
+          {entity.image
+            ? <img src={entity.image} alt={entity.name} onError={(e) => { e.target.style.display = "none"; }} />
+            : <div className="fmk-silhouette">?</div>}
+        </div>
+        <div className="fmk-card-name">{entity.name}</div>
+        <div className="fmk-card-source">{sourceLabel[entity.source] || entity.source}</div>
+        <div className="fmk-card-verdicts">
+          <VerdictButton kind="fuck" icon="🔥" label="FUCK"
+            selected={verdict === "fuck"}
+            disabled={locked || (takenVerdicts.has("fuck") && verdict !== "fuck") || !!verdict}
+            onClick={() => onAssign("fuck")} />
+          <VerdictButton kind="marry" icon="💍" label="MARRY"
+            selected={verdict === "marry"}
+            disabled={locked || (takenVerdicts.has("marry") && verdict !== "marry") || !!verdict}
+            onClick={() => onAssign("marry")} />
+          <VerdictButton kind="kill" icon="💀" label="KILL"
+            selected={verdict === "kill"}
+            disabled={locked || (takenVerdicts.has("kill") && verdict !== "kill") || !!verdict}
+            onClick={() => onAssign("kill")} />
+        </div>
+        {verdict && (
+          <div className={"fmk-stamp fmk-stamp-" + verdict}
+               style={{ "--stamp-rot": stampRot + "deg" }}>
+            {stampLabels[verdict]}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ── PoolSwitcher ─────────────────────────────────────────────────────
+  function PoolSwitcher({ mode, onChange }) {
+    const opts = [
+      { k: "custom", l: "Custom" },
+      { k: "celebs", l: "Célébs FR" },
+      { k: "beaufs", l: "Beaufs" },
+      { k: "mix",    l: "Mix" },
+    ];
+    return (
+      <div className="pool-switcher" role="tablist">
+        {opts.map(o => (
+          <button key={o.k} type="button" role="tab" aria-selected={mode === o.k}
+                  className={"pool-pill" + (mode === o.k ? " active" : "")}
+                  onClick={() => onChange(o.k)}>{o.l}</button>
+        ))}
+      </div>
+    );
+  }
+
+  // ── EntityEditor ─────────────────────────────────────────────────────
+  function EntityEditor({ pool, setPool }) {
+    const [draftName, setDraftName] = useState("");
+    const [draftImg, setDraftImg] = useState("");
+    const fileRef = useRef(null);
+
+    const add = () => {
+      const n = draftName.trim();
+      if (!n) return;
+      const e = {
+        id: "custom:" + Date.now() + ":" + n,
+        name: n,
+        image: draftImg.trim() || null,
+        source: "custom",
+      };
+      setPool([...pool, e]);
+      setDraftName(""); setDraftImg("");
+    };
+    const remove = (id) => setPool(pool.filter(e => e.id !== id));
+
+    const exportJson = () => {
+      const blob = new Blob([JSON.stringify(pool, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const stamp = new Date().toISOString().slice(0, 10);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `fmk-custom-pool-${stamp}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    };
+    const importJson = (file) => {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (!Array.isArray(parsed)) throw new Error("le fichier doit contenir un tableau.");
+          const cleaned = parsed
+            .filter(e => e && typeof e.name === "string" && e.name.trim())
+            .map(e => ({
+              id: typeof e.id === "string" ? e.id : "custom:" + Date.now() + ":" + e.name,
+              name: e.name.trim(),
+              image: typeof e.image === "string" && e.image.trim() ? e.image.trim() : null,
+              source: "custom",
+            }));
+          if (cleaned.length === 0) throw new Error("aucune entrée valide.");
+          if (!confirm("Remplacer la pool custom par le fichier importé (" + cleaned.length + " entrées) ?")) return;
+          setPool(cleaned);
+        } catch (err) {
+          alert("Import impossible : " + (err.message || "JSON invalide."));
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    return (
+      <div className="entity-editor">
+        <div className="ee-add">
+          <input className="ee-input" value={draftName}
+                 onChange={e => setDraftName(e.target.value.slice(0, 80))}
+                 placeholder="Nom"
+                 onKeyDown={e => e.key === "Enter" && add()} />
+          <input className="ee-input ee-img" value={draftImg}
+                 onChange={e => setDraftImg(e.target.value)}
+                 placeholder="URL image (optionnel)"
+                 onKeyDown={e => e.key === "Enter" && add()} />
+          <button className="ee-add-btn" onClick={add} disabled={!draftName.trim()}>+</button>
+        </div>
+        <div className="ee-list">
+          {pool.length === 0 ? (
+            <div className="ee-empty">Pool vide. Ajoute des entrées avec le champ ci-dessus.</div>
+          ) : pool.map(e => (
+            <div key={e.id} className="ee-item">
+              {e.image && <img src={e.image} alt="" className="ee-thumb"
+                                onError={(ev) => { ev.target.style.display = "none"; }} />}
+              <span className="ee-name">{e.name}</span>
+              <button className="ee-remove" onClick={() => remove(e.id)}
+                      aria-label="Supprimer">×</button>
+            </div>
+          ))}
+        </div>
+        <div className="ee-io">
+          <button className="ee-io-btn" onClick={exportJson} disabled={pool.length === 0}>↓ Exporter JSON</button>
+          <button className="ee-io-btn" onClick={() => fileRef.current?.click()}>↑ Importer JSON</button>
+          <input ref={fileRef} type="file" accept="application/json,.json"
+                 style={{ display: "none" }}
+                 onChange={(e) => {
+                   const f = e.target.files?.[0];
+                   if (f) importJson(f);
+                   e.target.value = "";
+                 }} />
+        </div>
+      </div>
+    );
+  }
+
+  // ── Registre ─────────────────────────────────────────────────────────
+  function Registre({ entries, onClear, onClose }) {
+    return (
+      <div className="vocab-overlay" onClick={onClose}>
+        <div className="vocab-modal" onClick={e => e.stopPropagation()}>
+          <div className="vocab-head">
+            <div>
+              <div className="vocab-title">Registre des Choix</div>
+              <div className="hos-sub" style={{
+                fontFamily: "'Special Elite', monospace",
+                fontSize: 12,
+                color: "rgba(245, 233, 208, 0.6)",
+                letterSpacing: "0.08em",
+                marginTop: 4,
+              }}>
+                {entries.length} trio{entries.length > 1 ? "s" : ""} assumé{entries.length > 1 ? "s" : ""}
+              </div>
+            </div>
+            <button className="hos-close" onClick={onClose}>×</button>
+          </div>
+          <div className="reg-list">
+            {entries.length === 0 ? (
+              <div className="reg-empty">Aucun trio assumé pour le moment.</div>
+            ) : entries.map((e, i) => (
+              <div key={i} className="reg-row">
+                <div className="reg-num">#{entries.length - i}</div>
+                <div className="reg-text">
+                  <span><b>{e.player || "Anonyme"}</b> a tranché :</span>
+                  <span>
+                    {(e.trio || []).map((name, j) => (
+                      <span key={j} className={"reg-verdict reg-verdict-" + ((e.verdicts || {})[name] || "fuck")}>
+                        {name} → {((e.verdicts || {})[name] || "?").toUpperCase()}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          {entries.length > 0 && (
+            <button className="hos-clear" onClick={onClear}>Effacer le registre</button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── App ──────────────────────────────────────────────────────────────
+  function App() {
+    // Player name partagé avec Roulette via rc_name_v1
+    const [playerName, setPlayerNameState] = useState(() => storage.getStr(NAME_KEY, ""));
+    const setPlayerName = (n) => {
+      setPlayerNameState(n);
+      storage.setStr(NAME_KEY, n || "");
+    };
+
+    const { requireName, modal: nameModal } = useNameGate(playerName, setPlayerName, {
+      title: "Votre nom",
+      hint: "Avant de tirer, on a besoin de savoir qui assume.",
+      ctaLabel: "Valider et tirer",
+    });
+
+    // Pools
+    const [customPool, setCustomPoolState] = useState(() => storage.get(POOL_KEY, []));
+    const setCustomPool = (p) => { setCustomPoolState(p); storage.set(POOL_KEY, p); };
+    const [mode, setMode] = useState(() => storage.getStr(ACTIVE_KEY, "celebs"));
+    useEffect(() => { storage.setStr(ACTIVE_KEY, mode); }, [mode]);
+
+    // Settings
+    const [soundOn, setSoundOnState] = useState(() => {
+      const s = storage.get(SETTINGS_KEY, { soundOn: true });
+      return s && typeof s.soundOn === "boolean" ? s.soundOn : true;
+    });
+    useEffect(() => {
+      storage.set(SETTINGS_KEY, { soundOn });
+      window.audio.setEnabled(soundOn);
+    }, [soundOn]);
+
+    // Game state
+    const [phase, setPhase] = useState("idle"); // idle | drawn | complete | resolved
+    const [trio, setTrio] = useState(null);
+    const [verdicts, setVerdicts] = useState({}); // entityId -> 'fuck'|'marry'|'kill'
+    const [drawKey, setDrawKey] = useState(0);
+
+    // Overlays
+    const [showEditor, setShowEditor] = useState(false);
+    const [showRegistre, setShowRegistre] = useState(false);
+    const [registreEntries, setRegistreEntries] = useState(() => hall.byGame("fmk"));
+
+    const pool = useMemo(() => buildPool(mode, customPool), [mode, customPool]);
+    const canDraw = pool.length >= 3;
+
+    // Reset si on change de pool en plein milieu d'un tirage
+    const onModeChange = (m) => {
+      if (m === mode) return;
+      setMode(m);
+      if (phase !== "idle" && phase !== "resolved") {
+        setTrio(null); setVerdicts({}); setPhase("idle");
+      }
+    };
+
+    const drawNew = () => {
+      if (!canDraw) return;
+      const t = drawTrio(pool);
+      if (!t) return;
+      setTrio(t);
+      setVerdicts({});
+      setPhase("drawn");
+      setDrawKey(k => k + 1);
+      // flip cascade : 3 sons décalés
+      window.audio.playFlip();
+      setTimeout(() => window.audio.playFlip(), 200);
+      setTimeout(() => window.audio.playFlip(), 400);
+    };
+
+    const assignVerdict = (entityId, kind) => {
+      if (phase !== "drawn") return;
+      if (verdicts[entityId]) return;
+      if (Object.values(verdicts).includes(kind)) return;
+      const next = { ...verdicts, [entityId]: kind };
+      setVerdicts(next);
+      window.audio.playStamp();
+      if (Object.keys(next).length === 3) {
+        setPhase("complete");
+        setTimeout(() => window.audio.playLock(), 250);
+      }
+    };
+
+    const reTirer = () => {
+      setVerdicts({});
+      setTrio(null);
+      setPhase("idle");
+    };
+
+    const assumer = () => {
+      if (phase !== "complete" || !trio) return;
+      const verdictsByName = {};
+      trio.forEach(e => { verdictsByName[e.name] = verdicts[e.id]; });
+      const entry = {
+        game: "fmk",
+        player: playerName || "Anonyme",
+        trio: trio.map(e => e.name),
+        verdicts: verdictsByName,
+      };
+      hall.add(entry);
+      setRegistreEntries(hall.byGame("fmk"));
+      setPhase("resolved");
+    };
+
+    const newRound = () => {
+      setVerdicts({});
+      setTrio(null);
+      setPhase("idle");
+    };
+
+    const takenVerdicts = useMemo(
+      () => new Set(Object.values(verdicts)),
+      [verdicts]
+    );
+
+    const insufficientReason = !canDraw
+      ? (mode === "custom"
+          ? `Il faut au moins 3 entrées dans la pool custom (actuellement ${customPool.length}).`
+          : "Pool insuffisante pour tirer un trio.")
+      : null;
+
+    return (
+      <div className="fmk">
+        <DustParticles />
+
+        <header className="fmk-head">
+          <div className="fmk-nav">
+            <a className="fmk-back" href="index.html">← Le Cercle</a>
+            <button className="fmk-history-btn"
+                    onClick={() => { setRegistreEntries(hall.byGame("fmk")); setShowRegistre(true); }}>
+              <span className="fmk-history-num">{registreEntries.length}</span>
+              Registre
+            </button>
+          </div>
+          <div className="fmk-title-wrap">
+            <div className="fmk-title-sub">— ★ jeu №2 ★ —</div>
+            <h1 className="fmk-title">Fuck Marry Kill</h1>
+            <div className="fmk-tag">trois âmes, trois verdicts</div>
+          </div>
+          <div className="fmk-nav-right">
+            <div className="player-input-wrap">
+              <span className="player-label">Joueur</span>
+              <input className="player-input"
+                     value={playerName}
+                     onChange={e => setPlayerName(e.target.value.slice(0, 24))}
+                     placeholder="Votre nom..."
+                     maxLength={24} />
+            </div>
+            <button className="fmk-edit-btn" onClick={() => setShowEditor(true)}>Pool custom</button>
+          </div>
+        </header>
+
+        <main className="fmk-stage">
+          <PoolSwitcher mode={mode} onChange={onModeChange} />
+
+          {phase === "idle" && (
+            <div className="fmk-cta-wrap">
+              {insufficientReason && <div className="fmk-warn">{insufficientReason}</div>}
+              <button className="fmk-cta"
+                      onClick={requireName(drawNew)}
+                      disabled={!canDraw}>
+                <span className="fmk-cta-inner">TIRER LE TRIO</span>
+              </button>
+            </div>
+          )}
+
+          {(phase === "drawn" || phase === "complete") && trio && (
+            <div className="fmk-cards" key={drawKey}>
+              {trio.map((entity, i) => (
+                <FMKCard key={entity.id + ":" + drawKey}
+                         entity={entity}
+                         index={i}
+                         verdict={verdicts[entity.id]}
+                         takenVerdicts={takenVerdicts}
+                         onAssign={(kind) => assignVerdict(entity.id, kind)}
+                         locked={phase === "complete"} />
+              ))}
+            </div>
+          )}
+
+          {phase === "complete" && (
+            <div className="fmk-actions">
+              <button className="fmk-action fmk-redo" onClick={reTirer}>RE-TIRER</button>
+              <button className="fmk-action fmk-assume" onClick={assumer}>ASSUMER</button>
+            </div>
+          )}
+
+          {phase === "resolved" && trio && (
+            <div className="fmk-result">
+              <div className="fmk-result-stamp">VERDICTS</div>
+              <div className="fmk-result-text">
+                {playerName
+                  ? <>Vous, <b>{playerName}</b>, avez tranché :</>
+                  : "Verdicts tranchés :"}
+              </div>
+              <ul className="fmk-result-list">
+                {trio.map(e => (
+                  <li key={e.id} className={"fmk-result-row fmk-result-" + verdicts[e.id]}>
+                    <span className="fmk-result-name">{e.name}</span>
+                    <span className="fmk-result-arrow">→</span>
+                    <span className="fmk-result-verdict">{verdicts[e.id].toUpperCase()}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="fmk-result-actions">
+                <button className="fmk-result-btn" onClick={newRound}>Nouveau tirage</button>
+                <a className="fmk-result-btn secondary" href="index.html">Retour au Cercle</a>
+              </div>
+            </div>
+          )}
+        </main>
+
+        {showEditor && (
+          <div className="vocab-overlay" onClick={() => setShowEditor(false)}>
+            <div className="vocab-modal" onClick={e => e.stopPropagation()}>
+              <div className="vocab-head">
+                <div className="vocab-title">Pool Custom</div>
+                <button className="hos-close" onClick={() => setShowEditor(false)}>×</button>
+              </div>
+              <EntityEditor pool={customPool} setPool={setCustomPool} />
+            </div>
+          </div>
+        )}
+
+        {showRegistre && (
+          <Registre entries={registreEntries}
+                    onClear={() => { hall.clear("fmk"); setRegistreEntries([]); }}
+                    onClose={() => setShowRegistre(false)} />
+        )}
+
+        {nameModal}
+
+        <div className="settings-bar">
+          <button className={"sb-toggle " + (soundOn ? "on" : "")}
+                  onClick={() => setSoundOnState(v => !v)}>
+            {soundOn ? "🔊 SON ON" : "🔇 SON OFF"}
+          </button>
+        </div>
+
+        <footer className="fmk-foot">
+          <span>♠ ♥ ♣ ♦</span>
+          <span style={{ fontStyle: "italic", margin: "0 18px" }}>tu décides, tu assumes</span>
+          <span>♦ ♣ ♥ ♠</span>
+        </footer>
+      </div>
+    );
+  }
+
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(<App />);
+  </script>
+</body>
+</html>

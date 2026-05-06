@@ -135,6 +135,75 @@ window.audio = (function () {
     } catch (e) {}
   }
 
+  // Sons FMK : flip de carte, tampon de verdict, lock du trio assumé.
+  function playFlip(volume = 0.16) {
+    if (!enabled) return;
+    try {
+      const c = ac(); const t = c.currentTime;
+      const o = c.createOscillator(); const g = c.createGain();
+      o.type = "triangle";
+      o.frequency.setValueAtTime(420, t);
+      o.frequency.exponentialRampToValueAtTime(960, t + 0.06);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(volume, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+      o.connect(g).connect(c.destination);
+      o.start(t); o.stop(t + 0.1);
+    } catch (e) {}
+  }
+
+  function playStamp(volume = 0.22) {
+    if (!enabled) return;
+    try {
+      const c = ac(); const t = c.currentTime;
+      // burst de bruit court filtré pour le claquement
+      const len = Math.floor(c.sampleRate * 0.05);
+      const buf = c.createBuffer(1, len, c.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (len * 0.4));
+      }
+      const src = c.createBufferSource();
+      const flt = c.createBiquadFilter();
+      flt.type = "lowpass"; flt.frequency.value = 800;
+      const gn = c.createGain();
+      gn.gain.setValueAtTime(volume, t);
+      gn.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+      src.buffer = buf;
+      src.connect(flt).connect(gn).connect(c.destination);
+      src.start(t);
+      // sine basse très courte pour le poids
+      const o = c.createOscillator(); const og = c.createGain();
+      o.type = "sine";
+      o.frequency.setValueAtTime(80, t);
+      o.frequency.exponentialRampToValueAtTime(50, t + 0.08);
+      og.gain.setValueAtTime(volume * 0.7, t);
+      og.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+      o.connect(og).connect(c.destination);
+      o.start(t); o.stop(t + 0.12);
+    } catch (e) {}
+  }
+
+  function playLock(volume = 0.18) {
+    if (!enabled) return;
+    try {
+      const c = ac(); const start = c.currentTime;
+      // do-mi-sol-do arpégé rapide
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, i) => {
+        const t = start + i * 0.06;
+        const o = c.createOscillator(); const g = c.createGain();
+        o.type = "triangle";
+        o.frequency.setValueAtTime(freq, t);
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(volume, t + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+        o.connect(g).connect(c.destination);
+        o.start(t); o.stop(t + 0.32);
+      });
+    } catch (e) {}
+  }
+
   function playDefeat(volume = 0.18) {
     if (!enabled) return;
     try {
@@ -172,6 +241,7 @@ window.audio = (function () {
     setEnabled(v) { enabled = !!v; },
     isEnabled() { return enabled; },
     playClick, playDrumroll, playDing, playDefeat,
+    playFlip, playStamp, playLock,
   };
 })();
 
