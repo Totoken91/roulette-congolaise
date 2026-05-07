@@ -814,90 +814,161 @@
     "Jamel Debbouze", "Alain Delon", "Bernard-Henri Lévy",
   ];
 
-  const FMK_FICTIONS = [
-    // ── Game of Thrones ──
-    "Daenerys Targaryen", "Tyrion Lannister", "Jon Snow", "Cersei Lannister",
-    "Arya Stark", "Sansa Stark", "Khal Drogo", "Brienne of Tarth",
-    "Jaime Lannister", "Petyr Baelish", "Ned Stark", "Joffrey Baratheon",
-    "Margaery Tyrell", "Sandor Clegane",
-    // ── Star Wars ──
-    "Princesse Leia", "Han Solo", "Luke Skywalker", "Darth Vader",
-    "Yoda", "Obi-Wan Kenobi", "Padmé Amidala", "Anakin Skywalker",
-    "Rey", "Kylo Ren", "Boba Fett", "Chewbacca",
-    // ── Marvel ──
-    "Tony Stark", "Steve Rogers", "Thor", "Loki",
-    "Bruce Banner", "Natasha Romanoff", "Wanda Maximoff", "Doctor Strange",
-    "Peter Parker", "T'Challa", "Carol Danvers", "Wade Wilson",
-    "Bucky Barnes", "Sam Wilson", "Vision",
-    // ── DC ──
-    "Bruce Wayne", "Le Joker (Heath Ledger)", "Catwoman", "Wonder Woman",
-    "Harley Quinn", "Superman", "Aquaman", "The Flash",
-    // ── Drames / classiques ──
-    "Hannibal Lecter", "Tony Soprano", "Walter White", "James Bond",
-    "Indiana Jones", "Ellen Ripley", "Sarah Connor", "Le Terminator",
-    "Forrest Gump", "Jack Sparrow", "Maximus", "Vincent Vega",
-    "Jules Winnfield", "Mia Wallace", "Tyler Durden", "Alex DeLarge",
-    "Patrick Bateman", "Jack Torrance", "The Dude", "Tony Montana",
-    "Michael Corleone", "Vito Corleone", "Rocky Balboa", "Norman Bates",
-    "Travis Bickle",
-    // ── Harry Potter ──
-    "Hermione Granger", "Harry Potter", "Ron Weasley", "Severus Snape",
-    "Albus Dumbledore", "Lord Voldemort", "Bellatrix Lestrange", "Draco Malfoy",
-    // ── Le Seigneur des Anneaux ──
-    "Frodo Baggins", "Aragorn", "Legolas", "Gandalf",
-    "Galadriel", "Arwen", "Gollum", "Sauron",
-    // ── Séries ──
-    "Eleven (Stranger Things)", "Don Draper", "Carrie Bradshaw", "Rachel Green",
-    "Joey Tribbiani", "Michael Scott", "Saul Goodman", "Gus Fring",
-    "Joe Goldberg", "Sherlock Holmes",
+  // Pour les persos live-action, on associe l'acteur le plus iconique.
+  // L'image sera fetch depuis Wikipedia de l'ACTEUR (portrait propre)
+  // au lieu de la page du personnage (souvent un poster ou un logo).
+  // Les rôles costumés/CGI (Vader, Yoda, Gollum, Sauron, etc.) gardent
+  // pas d'acteur — on fetch alors la page du personnage qui a une image
+  // du costume.
+  const FMK_FICTIONS_LIVE = [
+    // Game of Thrones
+    { name: "Daenerys Targaryen", actor: "Emilia Clarke" },
+    { name: "Tyrion Lannister", actor: "Peter Dinklage" },
+    { name: "Jon Snow", actor: "Kit Harington" },
+    { name: "Cersei Lannister", actor: "Lena Headey" },
+    { name: "Arya Stark", actor: "Maisie Williams" },
+    { name: "Sansa Stark", actor: "Sophie Turner" },
+    { name: "Khal Drogo", actor: "Jason Momoa" },
+    { name: "Brienne of Tarth", actor: "Gwendoline Christie" },
+    { name: "Jaime Lannister", actor: "Nikolaj Coster-Waldau" },
+    { name: "Petyr Baelish", actor: "Aidan Gillen" },
+    { name: "Ned Stark", actor: "Sean Bean" },
+    { name: "Joffrey Baratheon", actor: "Jack Gleeson" },
+    { name: "Margaery Tyrell", actor: "Natalie Dormer" },
+    { name: "Sandor Clegane", actor: "Rory McCann" },
+    // Star Wars
+    { name: "Princesse Leia", actor: "Carrie Fisher" },
+    { name: "Han Solo", actor: "Harrison Ford" },
+    { name: "Luke Skywalker", actor: "Mark Hamill" },
+    { name: "Darth Vader" },
+    { name: "Yoda" },
+    { name: "Obi-Wan Kenobi", actor: "Ewan McGregor" },
+    { name: "Padmé Amidala", actor: "Natalie Portman" },
+    { name: "Anakin Skywalker", actor: "Hayden Christensen" },
+    { name: "Rey", actor: "Daisy Ridley" },
+    { name: "Kylo Ren", actor: "Adam Driver" },
+    { name: "Boba Fett" },
+    { name: "Chewbacca" },
+    // Marvel
+    { name: "Tony Stark", actor: "Robert Downey Jr." },
+    { name: "Steve Rogers", actor: "Chris Evans" },
+    { name: "Thor", actor: "Chris Hemsworth" },
+    { name: "Loki", actor: "Tom Hiddleston" },
+    { name: "Bruce Banner", actor: "Mark Ruffalo" },
+    { name: "Natasha Romanoff", actor: "Scarlett Johansson" },
+    { name: "Wanda Maximoff", actor: "Elizabeth Olsen" },
+    { name: "Doctor Strange", actor: "Benedict Cumberbatch" },
+    { name: "Peter Parker", actor: "Tom Holland" },
+    { name: "T'Challa", actor: "Chadwick Boseman" },
+    { name: "Carol Danvers", actor: "Brie Larson" },
+    { name: "Wade Wilson", actor: "Ryan Reynolds" },
+    { name: "Bucky Barnes", actor: "Sebastian Stan" },
+    { name: "Sam Wilson", actor: "Anthony Mackie" },
+    { name: "Vision", actor: "Paul Bettany" },
+    // DC
+    { name: "Bruce Wayne", actor: "Christian Bale" },
+    { name: "Le Joker (Heath Ledger)", actor: "Heath Ledger" },
+    { name: "Catwoman", actor: "Anne Hathaway" },
+    { name: "Wonder Woman", actor: "Gal Gadot" },
+    { name: "Harley Quinn", actor: "Margot Robbie" },
+    { name: "Superman", actor: "Henry Cavill" },
+    { name: "Aquaman", actor: "Jason Momoa" },
+    { name: "The Flash", actor: "Ezra Miller" },
+    // Drames / classiques
+    { name: "Hannibal Lecter", actor: "Anthony Hopkins" },
+    { name: "Tony Soprano", actor: "James Gandolfini" },
+    { name: "Walter White", actor: "Bryan Cranston" },
+    { name: "James Bond", actor: "Daniel Craig" },
+    { name: "Indiana Jones", actor: "Harrison Ford" },
+    { name: "Ellen Ripley", actor: "Sigourney Weaver" },
+    { name: "Sarah Connor", actor: "Linda Hamilton" },
+    { name: "Le Terminator", actor: "Arnold Schwarzenegger" },
+    { name: "Forrest Gump", actor: "Tom Hanks" },
+    { name: "Jack Sparrow", actor: "Johnny Depp" },
+    { name: "Maximus", actor: "Russell Crowe" },
+    { name: "Vincent Vega", actor: "John Travolta" },
+    { name: "Jules Winnfield", actor: "Samuel L. Jackson" },
+    { name: "Mia Wallace", actor: "Uma Thurman" },
+    { name: "Tyler Durden", actor: "Brad Pitt" },
+    { name: "Alex DeLarge", actor: "Malcolm McDowell" },
+    { name: "Patrick Bateman", actor: "Christian Bale" },
+    { name: "Jack Torrance", actor: "Jack Nicholson" },
+    { name: "The Dude", actor: "Jeff Bridges" },
+    { name: "Tony Montana", actor: "Al Pacino" },
+    { name: "Michael Corleone", actor: "Al Pacino" },
+    { name: "Vito Corleone", actor: "Marlon Brando" },
+    { name: "Rocky Balboa", actor: "Sylvester Stallone" },
+    { name: "Norman Bates", actor: "Anthony Perkins" },
+    { name: "Travis Bickle", actor: "Robert De Niro" },
+    // Harry Potter
+    { name: "Hermione Granger", actor: "Emma Watson" },
+    { name: "Harry Potter", actor: "Daniel Radcliffe" },
+    { name: "Ron Weasley", actor: "Rupert Grint" },
+    { name: "Severus Snape", actor: "Alan Rickman" },
+    { name: "Albus Dumbledore", actor: "Michael Gambon" },
+    { name: "Lord Voldemort", actor: "Ralph Fiennes" },
+    { name: "Bellatrix Lestrange", actor: "Helena Bonham Carter" },
+    { name: "Draco Malfoy", actor: "Tom Felton" },
+    // LOTR
+    { name: "Frodo Baggins", actor: "Elijah Wood" },
+    { name: "Aragorn", actor: "Viggo Mortensen" },
+    { name: "Legolas", actor: "Orlando Bloom" },
+    { name: "Gandalf", actor: "Ian McKellen" },
+    { name: "Galadriel", actor: "Cate Blanchett" },
+    { name: "Arwen", actor: "Liv Tyler" },
+    { name: "Gollum" },
+    { name: "Sauron" },
+    // Séries
+    { name: "Eleven (Stranger Things)", actor: "Millie Bobby Brown" },
+    { name: "Don Draper", actor: "Jon Hamm" },
+    { name: "Carrie Bradshaw", actor: "Sarah Jessica Parker" },
+    { name: "Rachel Green", actor: "Jennifer Aniston" },
+    { name: "Joey Tribbiani", actor: "Matt LeBlanc" },
+    { name: "Michael Scott", actor: "Steve Carell" },
+    { name: "Saul Goodman", actor: "Bob Odenkirk" },
+    { name: "Gus Fring", actor: "Giancarlo Esposito" },
+    { name: "Joe Goldberg", actor: "Penn Badgley" },
+    { name: "Sherlock Holmes", actor: "Benedict Cumberbatch" },
+  ];
 
-    // ── Naruto ──
+  // Anime — fetch via Jikan API (MyAnimeList) qui retourne des
+  // portraits de personnages, pas des logos d'animés.
+  const FMK_FICTIONS_ANIME = [
     "Naruto Uzumaki", "Sasuke Uchiha", "Sakura Haruno", "Kakashi Hatake",
     "Itachi Uchiha", "Hinata Hyuga", "Rock Lee", "Gaara",
     "Jiraya", "Madara Uchiha",
-    // ── Dragon Ball ──
     "Son Goku", "Vegeta", "Bulma", "Piccolo",
     "Krilin", "Gohan", "Freezer", "Cell",
-    // ── One Piece ──
     "Monkey D. Luffy", "Roronoa Zoro", "Nami", "Sanji",
     "Tony Tony Chopper", "Nico Robin", "Portgas D. Ace", "Boa Hancock",
     "Trafalgar Law", "Shanks",
-    // ── Attack on Titan ──
     "Eren Yeager", "Mikasa Ackerman", "Levi Ackerman", "Armin Arlert",
     "Erwin Smith", "Hange Zoë", "Annie Leonhart", "Reiner Braun",
-    // ── Death Note ──
-    "Light Yagami", "L (Death Note)", "Misa Amane", "Ryuk",
-    // ── Fullmetal Alchemist ──
+    "Light Yagami", "L Lawliet", "Misa Amane", "Ryuk",
     "Edward Elric", "Alphonse Elric", "Roy Mustang", "Riza Hawkeye",
     "Winry Rockbell",
-    // ── Bleach ──
     "Ichigo Kurosaki", "Rukia Kuchiki", "Byakuya Kuchiki", "Sosuke Aizen",
-    // ── My Hero Academia ──
     "Izuku Midoriya", "Katsuki Bakugo", "Shoto Todoroki", "Ochaco Uraraka",
     "All Might",
-    // ── Demon Slayer ──
     "Tanjiro Kamado", "Nezuko Kamado", "Zenitsu Agatsuma", "Inosuke Hashibira",
     "Muzan Kibutsuji",
-    // ── Jujutsu Kaisen ──
     "Yuji Itadori", "Megumi Fushiguro", "Nobara Kugisaki", "Satoru Gojo",
-    // ── Chainsaw Man ──
-    "Denji", "Power (Chainsaw Man)", "Makima",
-    // ── Studio Ghibli ──
-    "Chihiro Ogino", "Howl Pendragon", "Sophie Hatter", "Princesse Mononoké",
-    "Ashitaka", "Totoro", "Kiki la sorcière", "Ponyo",
-    // ── Evangelion ──
+    "Denji", "Power Chainsaw Man", "Makima",
+    "Chihiro Ogino", "Howl Pendragon", "Sophie Hatter", "San Mononoke",
+    "Ashitaka", "Totoro", "Kiki Delivery", "Ponyo",
     "Shinji Ikari", "Asuka Langley", "Rei Ayanami", "Misato Katsuragi",
     "Kaworu Nagisa",
-    // ── Cowboy Bebop ──
     "Spike Spiegel", "Faye Valentine", "Jet Black",
-    // ── Code Geass ──
-    "Lelouch Lamperouge", "Suzaku Kururugi", "C.C. (Code Geass)",
-    // ── Sailor Moon ──
+    "Lelouch Lamperouge", "Suzaku Kururugi", "C.C. Code Geass",
     "Usagi Tsukino", "Sailor Mars", "Tuxedo Mask",
-    // ── Autres anime classiques ──
-    "Saitama (One Punch Man)", "Genos", "Vash the Stampede", "Yusuke Urameshi",
+    "Saitama", "Genos", "Vash Stampede", "Yusuke Urameshi",
     "Inuyasha", "Kagome Higurashi", "Kenshin Himura", "Motoko Kusanagi",
     "Lain Iwakura", "Ash Ketchum", "Pikachu", "Mewtwo",
+  ];
+
+  const FMK_FICTIONS = [
+    ...FMK_FICTIONS_LIVE.map(e => ({ ...e, kind: "live" })),
+    ...FMK_FICTIONS_ANIME.map(name => ({ name, kind: "anime" })),
   ];
 
   const POOL_KEY = "fmk_custom_pool";
@@ -905,18 +976,28 @@
   const SETTINGS_KEY = "fmk_settings_v1";
   const NAME_KEY = "rc_name_v1"; // partagé avec Roulette pour fluidité
 
-  function entityFromPreset(name, source) {
+  function entityFromPresetName(name, source) {
     return { id: source + ":" + name, name, image: null, source };
+  }
+  function entityFromFiction(e) {
+    return {
+      id: "fictions:" + (e.kind || "misc") + ":" + e.name,
+      name: e.name,
+      image: null,
+      actor: e.actor,
+      kind: e.kind,
+      source: "fictions",
+    };
   }
   function buildPool(mode, custom) {
     if (mode === "custom") return custom;
-    if (mode === "celebs") return FMK_CELEBS.map(n => entityFromPreset(n, "celebs"));
-    if (mode === "fictions") return FMK_FICTIONS.map(n => entityFromPreset(n, "fictions"));
+    if (mode === "celebs") return FMK_CELEBS.map(n => entityFromPresetName(n, "celebs"));
+    if (mode === "fictions") return FMK_FICTIONS.map(entityFromFiction);
     if (mode === "mix") {
       return [
         ...custom,
-        ...FMK_CELEBS.map(n => entityFromPreset(n, "celebs")),
-        ...FMK_FICTIONS.map(n => entityFromPreset(n, "fictions")),
+        ...FMK_CELEBS.map(n => entityFromPresetName(n, "celebs")),
+        ...FMK_FICTIONS.map(entityFromFiction),
       ];
     }
     return [];
@@ -945,12 +1026,20 @@
     );
   }
 
-  // ── Wikipedia image fetch + cache ────────────────────────────────────
-  // Pour les entités preset (sans image fournie), on fetch un thumbnail
-  // depuis Wikipedia (fr en priorité, fallback en). Cache localStorage
-  // partagé entre toutes les sessions ; on stocke null quand l'API ne
-  // retourne rien pour ne pas re-fetch indéfiniment.
-  const IMG_CACHE_KEY = "fmk_image_cache_v1";
+  // ── Image fetch + cache ──────────────────────────────────────────────
+  // Stratégie par type d'entité :
+  // - custom avec image user-supplied : on l'utilise direct.
+  // - kind === "anime" : Jikan API (MyAnimeList) qui retourne des
+  //   portraits de personnages. Fallback Wikipedia si pas de match.
+  // - kind === "live" avec actor : Wikipedia summary de l'ACTEUR
+  //   (portrait propre) plutôt que de la page perso (souvent un poster).
+  //   Fallback sur le nom du perso si l'acteur n'a pas d'image.
+  // - sinon : Wikipedia summary du nom du perso.
+  //
+  // Cache localStorage indexé par cacheKey (kind:name) ; on stocke null
+  // pour les recherches qui n'ont rien retourné (évite re-fetch boucle).
+  // Clé v2 : invalide les images Wikipedia mal ciblées de la v1.
+  const IMG_CACHE_KEY = "fmk_image_cache_v2";
   const imageCache = new Map(Object.entries(storage.get(IMG_CACHE_KEY, {})));
   let saveCacheTimer = null;
   function saveImageCache() {
@@ -961,24 +1050,54 @@
       storage.set(IMG_CACHE_KEY, obj);
     }, 300);
   }
-  async function fetchWikiImage(name) {
+  function cacheKeyOf(entity) {
+    return (entity.kind || "misc") + ":" + entity.name;
+  }
+
+  // Wikipedia REST summary endpoint — retourne plus souvent une image
+  // d'infobox propre que l'API legacy pageimages.
+  async function fetchWikiSummaryImage(title) {
+    if (!title) return null;
     for (const lang of ["fr", "en"]) {
       try {
-        const url = `https://${lang}.wikipedia.org/w/api.php`
-          + `?action=query&prop=pageimages&pithumbsize=400`
-          + `&format=json&origin=*&redirects=1`
-          + `&titles=${encodeURIComponent(name)}`;
-        const res = await fetch(url);
+        const url = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+        const res = await fetch(url, { headers: { accept: "application/json" } });
         if (!res.ok) continue;
         const data = await res.json();
-        const pages = (data && data.query && data.query.pages) || {};
-        for (const pid in pages) {
-          const thumb = pages[pid] && pages[pid].thumbnail && pages[pid].thumbnail.source;
-          if (thumb) return thumb;
-        }
+        const img = (data && data.thumbnail && data.thumbnail.source)
+                 || (data && data.originalimage && data.originalimage.source);
+        if (img) return img;
       } catch (e) {}
     }
     return null;
+  }
+
+  // Jikan v4 (MyAnimeList) — limit=1, retourne le best-match character.
+  async function fetchJikanImage(name) {
+    try {
+      const url = `https://api.jikan.moe/v4/characters?q=${encodeURIComponent(name)}&limit=1`;
+      const res = await fetch(url);
+      if (!res.ok) return null;
+      const data = await res.json();
+      const ch = data && data.data && data.data[0];
+      if (!ch) return null;
+      return (ch.images && ch.images.jpg && ch.images.jpg.image_url)
+          || (ch.images && ch.images.webp && ch.images.webp.image_url)
+          || null;
+    } catch (e) { return null; }
+  }
+
+  async function fetchEntityImage(entity) {
+    if (entity.image) return entity.image;
+    if (entity.kind === "anime") {
+      const j = await fetchJikanImage(entity.name);
+      if (j) return j;
+    }
+    if (entity.kind === "live" && entity.actor) {
+      const a = await fetchWikiSummaryImage(entity.actor);
+      if (a) return a;
+    }
+    return await fetchWikiSummaryImage(entity.name);
   }
 
   // ── FMKCard ──────────────────────────────────────────────────────────
@@ -988,21 +1107,21 @@
     const stampLabels = { fuck: "FUCK", marry: "MARRY", kill: "KILL" };
     const sourceLabel = { custom: "Custom", celebs: "Célébs FR", fictions: "Films & Anime" };
 
-    // Image résolue : entity.image (custom user-supplied) > cache > fetch.
-    // États : string = url valide ; null = pas d'image trouvée ;
-    // undefined = pas encore résolu (loading, on affiche silhouette).
+    // Image résolue : entity.image > cache > fetch.
+    // string = url valide ; null = rien trouvé ; undefined = pas encore.
+    const ck = cacheKeyOf(entity);
     const initialImg = entity.image
       ? entity.image
-      : (imageCache.has(entity.name) ? imageCache.get(entity.name) : undefined);
+      : (imageCache.has(ck) ? imageCache.get(ck) : undefined);
     const [resolvedImg, setResolvedImg] = useState(initialImg);
 
     useEffect(() => {
       if (entity.image) return;
       if (resolvedImg !== undefined) return;
       let cancelled = false;
-      fetchWikiImage(entity.name).then(url => {
+      fetchEntityImage(entity).then(url => {
         if (cancelled) return;
-        imageCache.set(entity.name, url);
+        imageCache.set(ck, url);
         saveImageCache();
         setResolvedImg(url);
       });
@@ -1015,7 +1134,7 @@
           {resolvedImg
             ? <img src={resolvedImg} alt={entity.name}
                    onError={() => {
-                     imageCache.set(entity.name, null);
+                     imageCache.set(ck, null);
                      saveImageCache();
                      setResolvedImg(null);
                    }} />
@@ -1317,10 +1436,13 @@
       setPhase("resolved");
     };
 
+    // Sur l'écran résultat, "Nouveau tirage" relance directement un trio
+    // (pas de retour à idle). Si la pool est insuffisante (cas limite),
+    // on retombe sur idle.
     const newRound = () => {
       setVerdicts({});
-      setTrio(null);
-      setPhase("idle");
+      if (canDraw) drawNew();
+      else { setTrio(null); setPhase("idle"); }
     };
 
     const takenVerdicts = useMemo(
