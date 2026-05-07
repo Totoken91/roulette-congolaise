@@ -270,7 +270,13 @@
     overflow: hidden;
     position: relative;
   }
-  .fmk-card-image img { width: 100%; height: 100%; object-fit: cover; }
+  .fmk-card-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    /* favorise le haut du portrait (où est le visage) plutôt que centre,
+       sinon Wikipedia/Jikan en orientation portrait coupe la tête */
+    object-position: center 20%;
+  }
   .fmk-silhouette {
     width: 100%; height: 100%;
     display: flex;
@@ -971,8 +977,10 @@
     ...FMK_FICTIONS_ANIME.map(name => ({ name, kind: "anime" })),
   ];
 
-  // Jeux vidéo — 300 entrées. wikiTitle optionnel quand le nom seul tombe
-  // sur une page de désambiguation Wikipedia (ex: Link, Zelda, Ryu...).
+  // Jeux vidéo — focus persos vraiment iconiques (roster Smash, LoL,
+  // Rockstar, Pokémon, FF, Witcher, Souls, OW, persos standalone
+  // ultra-connus). wikiTitle posé pour les noms ambigus afin de viser
+  // la bonne page Wikipedia (Link → "Link (The Legend of Zelda)" etc.).
   const FMK_GAMES = [
     // Mario
     { name: "Mario" }, { name: "Luigi" },
@@ -984,26 +992,29 @@
     { name: "Rosalina", wikiTitle: "Rosalina (Mario)" },
     { name: "Bowser Jr." },
     { name: "Donkey Kong" }, { name: "Diddy Kong" },
-    { name: "King K. Rool" }, { name: "Birdo" },
     // Zelda
     { name: "Link", wikiTitle: "Link (The Legend of Zelda)" },
     { name: "Princesse Zelda", wikiTitle: "Princess Zelda" },
-    { name: "Ganondorf" }, { name: "Sheik" }, { name: "Midna" },
-    { name: "Tingle" }, { name: "Skull Kid" },
-    { name: "Impa" }, { name: "Saria" }, { name: "Urbosa" },
-    // Pokémon (game-only, anime déjà couvert)
-    { name: "Eevee" }, { name: "Charizard" }, { name: "Lucario" },
-    { name: "Gardevoir" }, { name: "Greninja" },
-    { name: "Snorlax" }, { name: "Bulbasaur" }, { name: "Squirtle" },
+    { name: "Ganondorf" }, { name: "Sheik" },
+    { name: "Midna" }, { name: "Skull Kid" },
+    { name: "Impa" }, { name: "Urbosa" },
+    // Pokémon
+    { name: "Pikachu" }, { name: "Charizard" },
+    { name: "Mewtwo" }, { name: "Eevee" },
+    { name: "Lucario" }, { name: "Gardevoir" },
+    { name: "Greninja" }, { name: "Snorlax" },
+    { name: "Bulbasaur" }, { name: "Squirtle" },
     // Metroid
-    { name: "Samus Aran" }, { name: "Ridley", wikiTitle: "Ridley (Metroid)" },
-    { name: "Dark Samus" },
+    { name: "Samus Aran" },
+    { name: "Ridley", wikiTitle: "Ridley (Metroid)" },
     // Smash uniques
     { name: "Pit", wikiTitle: "Pit (Kid Icarus)" },
     { name: "Palutena" }, { name: "Captain Falcon" },
     { name: "Ness", wikiTitle: "Ness (EarthBound)" },
     { name: "Lucas", wikiTitle: "Lucas (Mother 3)" },
-    { name: "Olimar" }, { name: "Steve", wikiTitle: "Steve (Minecraft)" },
+    { name: "Olimar" },
+    { name: "Steve", wikiTitle: "Steve (Minecraft)" },
+    { name: "Banjo", wikiTitle: "Banjo (character)" },
     // Kirby
     { name: "Kirby", wikiTitle: "Kirby (character)" },
     { name: "King Dedede" }, { name: "Meta Knight" },
@@ -1014,146 +1025,97 @@
     { name: "Marth", wikiTitle: "Marth (Fire Emblem)" },
     { name: "Ike", wikiTitle: "Ike (Fire Emblem)" },
     { name: "Lucina", wikiTitle: "Lucina (Fire Emblem)" },
-    { name: "Byleth", wikiTitle: "Byleth (Fire Emblem)" },
     { name: "Edelgard", wikiTitle: "Edelgard von Hresvelg" },
     // Animal Crossing
     { name: "Isabelle", wikiTitle: "Isabelle (Animal Crossing)" },
-    { name: "Tom Nook" }, { name: "K.K. Slider" },
-    // Splatoon
-    { name: "Inkling" }, { name: "Marie", wikiTitle: "Squid Sisters" },
+    { name: "Tom Nook" },
     // Sonic
-    { name: "Sonic the Hedgehog" }, { name: "Miles \"Tails\" Prower" },
-    { name: "Knuckles the Echidna" }, { name: "Amy Rose" },
-    { name: "Shadow the Hedgehog" }, { name: "Doctor Eggman" },
-    { name: "Rouge the Bat" }, { name: "Silver the Hedgehog" },
-    // Final Fantasy
+    { name: "Sonic the Hedgehog" },
+    { name: "Miles \"Tails\" Prower" },
+    { name: "Knuckles the Echidna" },
+    { name: "Amy Rose" },
+    { name: "Shadow the Hedgehog" },
+    { name: "Doctor Eggman" },
+    // Final Fantasy iconic
     { name: "Cloud Strife" }, { name: "Tifa Lockhart" },
     { name: "Aerith Gainsborough" }, { name: "Sephiroth" },
-    { name: "Vincent Valentine" }, { name: "Barret Wallace" },
-    { name: "Squall Leonhart" }, { name: "Rinoa Heartilly" },
-    { name: "Tidus" }, { name: "Yuna", wikiTitle: "Yuna (Final Fantasy)" },
-    { name: "Auron", wikiTitle: "Auron (Final Fantasy)" },
+    { name: "Squall Leonhart" }, { name: "Tidus" },
     { name: "Lightning", wikiTitle: "Lightning (Final Fantasy)" },
-    { name: "Noctis Lucis Caelum" }, { name: "Cecil Harvey" },
-    { name: "Terra Branford" }, { name: "Kefka Palazzo" },
+    { name: "Noctis Lucis Caelum" },
     // Resident Evil
     { name: "Leon S. Kennedy" }, { name: "Chris Redfield" },
     { name: "Jill Valentine" }, { name: "Claire Redfield" },
     { name: "Ada Wong" }, { name: "Albert Wesker" },
-    { name: "Alcina Dimitrescu" }, { name: "Ethan Winters" },
-    { name: "Mr. X", wikiTitle: "Tyrant (Resident Evil)" },
-    { name: "Nemesis", wikiTitle: "Nemesis (Resident Evil)" },
+    { name: "Alcina Dimitrescu" },
     // Metal Gear
-    { name: "Solid Snake" }, { name: "Big Boss", wikiTitle: "Big Boss (Metal Gear)" },
-    { name: "Liquid Snake" }, { name: "Revolver Ocelot" },
+    { name: "Solid Snake" },
+    { name: "Big Boss", wikiTitle: "Big Boss (Metal Gear)" },
+    { name: "Revolver Ocelot" },
     { name: "Raiden", wikiTitle: "Raiden (Metal Gear)" },
-    { name: "The Boss", wikiTitle: "The Boss (Metal Gear)" },
     { name: "Quiet", wikiTitle: "Quiet (Metal Gear)" },
-    { name: "Otacon", wikiTitle: "Hal Emmerich" },
-    { name: "Psycho Mantis" }, { name: "Gray Fox", wikiTitle: "Gray Fox (Metal Gear)" },
     // Halo
     { name: "Master Chief" }, { name: "Cortana" },
     { name: "Arbiter", wikiTitle: "Arbiter (Halo)" },
-    { name: "Sergeant Johnson" }, { name: "Captain Keyes" },
     // Half-Life / Portal
     { name: "Gordon Freeman" }, { name: "Alyx Vance" },
-    { name: "G-Man", wikiTitle: "G-Man (Half-Life)" },
-    { name: "Chell" }, { name: "GLaDOS" },
-    { name: "Wheatley", wikiTitle: "Wheatley (Portal)" },
-    // Elder Scrolls / Fallout
-    { name: "Dovahkiin", wikiTitle: "Dragonborn (The Elder Scrolls V: Skyrim)" },
-    { name: "Sheogorath" },
-    { name: "Vault Boy" }, { name: "Three Dog" },
-    { name: "Caesar", wikiTitle: "Caesar (Fallout)" },
-    { name: "Mr. House", wikiTitle: "Robert House" },
+    { name: "GLaDOS" }, { name: "Chell" },
     // Witcher
-    { name: "Geralt of Rivia" }, { name: "Yennefer of Vengerberg" },
-    { name: "Triss Merigold" }, { name: "Cirilla", wikiTitle: "Ciri" },
-    { name: "Jaskier", wikiTitle: "Dandelion (The Witcher)" },
-    { name: "Vesemir" },
-    // Mass Effect
-    { name: "Commander Shepard" }, { name: "Garrus Vakarian" },
-    { name: "Liara T'Soni" }, { name: "Tali'Zorah" },
-    { name: "Urdnot Wrex" }, { name: "Mordin Solus" },
-    // Dragon Age
-    { name: "Morrigan", wikiTitle: "Morrigan (Dragon Age)" },
-    { name: "Alistair", wikiTitle: "Alistair (Dragon Age)" },
-    { name: "Iron Bull" },
-    { name: "Solas", wikiTitle: "Solas (Dragon Age)" },
-    // GTA
+    { name: "Geralt of Rivia" },
+    { name: "Yennefer of Vengerberg" },
+    { name: "Triss Merigold" },
+    { name: "Cirilla", wikiTitle: "Ciri" },
+    // Rockstar — GTA
     { name: "Trevor Philips" }, { name: "Michael De Santa" },
     { name: "Franklin Clinton" }, { name: "Niko Bellic" },
     { name: "Tommy Vercetti" },
     { name: "CJ", wikiTitle: "Carl Johnson (Grand Theft Auto)" },
     { name: "Lance Vance" }, { name: "Lamar Davis" },
-    // Red Dead
+    // Rockstar — Red Dead
     { name: "Arthur Morgan" }, { name: "John Marston" },
     { name: "Dutch van der Linde" }, { name: "Sadie Adler" },
     { name: "Micah Bell" },
     // The Last of Us
     { name: "Joel Miller" }, { name: "Ellie Williams" },
     { name: "Abby Anderson" },
-    { name: "Tess", wikiTitle: "Tess (The Last of Us)" },
-    { name: "David", wikiTitle: "David (The Last of Us)" },
     // BioShock
-    { name: "Jack", wikiTitle: "Jack (BioShock)" },
     { name: "Andrew Ryan" },
     { name: "Big Daddy", wikiTitle: "Big Daddy (BioShock)" },
     { name: "Booker DeWitt" },
     { name: "Elizabeth", wikiTitle: "Elizabeth (BioShock Infinite)" },
-    // Dishonored
-    { name: "Corvo Attano" }, { name: "Emily Kaldwin" },
-    { name: "The Outsider", wikiTitle: "The Outsider (Dishonored)" },
     // Assassin's Creed
-    { name: "Ezio Auditore da Firenze" }, { name: "Altaïr Ibn-La'Ahad" },
-    { name: "Edward Kenway" }, { name: "Connor Kenway" },
-    { name: "Bayek of Siwa" },
+    { name: "Ezio Auditore da Firenze" },
+    { name: "Altaïr Ibn-La'Ahad" },
+    { name: "Edward Kenway" }, { name: "Bayek of Siwa" },
     { name: "Kassandra", wikiTitle: "Kassandra (Assassin's Creed)" },
-    { name: "Alexios", wikiTitle: "Alexios (Assassin's Creed)" },
     { name: "Eivor", wikiTitle: "Eivor Varinsdottir" },
     // Devil May Cry / Bayonetta
-    { name: "Bayonetta", wikiTitle: "Bayonetta (character)" },
     { name: "Dante", wikiTitle: "Dante (Devil May Cry)" },
     { name: "Vergil", wikiTitle: "Vergil (Devil May Cry)" },
     { name: "Nero", wikiTitle: "Nero (Devil May Cry)" },
-    { name: "Lady", wikiTitle: "Lady (Devil May Cry)" },
+    { name: "Bayonetta", wikiTitle: "Bayonetta (character)" },
     // God of War
     { name: "Kratos" }, { name: "Atreus" },
-    { name: "Mimir", wikiTitle: "Mimir (God of War)" },
-    { name: "Freya", wikiTitle: "Freya (God of War)" },
     // Tekken
     { name: "Heihachi Mishima" }, { name: "Kazuya Mishima" },
     { name: "Jin Kazama" }, { name: "Yoshimitsu" },
-    { name: "Nina Williams" }, { name: "Lili", wikiTitle: "Lili (Tekken)" },
     // Street Fighter
     { name: "Ryu", wikiTitle: "Ryu (Street Fighter)" },
     { name: "Ken Masters" }, { name: "Chun-Li" },
     { name: "Akuma", wikiTitle: "Akuma (Street Fighter)" },
     { name: "Cammy White" }, { name: "Sagat" },
-    { name: "Blanka" }, { name: "Zangief" },
-    { name: "Dhalsim" }, { name: "M. Bison" },
+    { name: "Blanka" }, { name: "M. Bison" },
     // Mortal Kombat
     { name: "Scorpion", wikiTitle: "Scorpion (Mortal Kombat)" },
     { name: "Sub-Zero", wikiTitle: "Sub-Zero (Mortal Kombat)" },
-    { name: "Raiden Mortal Kombat", wikiTitle: "Raiden (Mortal Kombat)" },
     { name: "Liu Kang" }, { name: "Sonya Blade" },
     { name: "Johnny Cage" }, { name: "Kitana" },
     { name: "Mileena" }, { name: "Shao Kahn" },
-    { name: "Shang Tsung" },
-    // Persona
+    // Persona / Souls
     { name: "Joker", wikiTitle: "Joker (Persona)" },
-    { name: "Makoto Niijima" }, { name: "Ann Takamaki" },
-    { name: "Yu Narukami" }, { name: "Aigis" },
-    // Souls / FromSoftware
+    { name: "Yu Narukami" },
     { name: "Solaire of Astora" },
-    { name: "Knight Artorias" },
-    { name: "The Hunter", wikiTitle: "Hunter (Bloodborne)" },
-    { name: "Lady Maria of the Astral Clocktower" },
-    { name: "Sekiro" }, { name: "Tarnished" },
-    { name: "Ranni the Witch" },
+    { name: "Tarnished" }, { name: "Ranni the Witch" },
     { name: "Malenia, Blade of Miquella" },
-    { name: "Starscourge Radahn" },
-    { name: "Gwyn, Lord of Cinder" },
     // Overwatch
     { name: "Tracer", wikiTitle: "Tracer (Overwatch)" },
     { name: "Soldier 76", wikiTitle: "Soldier: 76" },
@@ -1163,16 +1125,11 @@
     { name: "D.Va" },
     { name: "Genji", wikiTitle: "Genji (Overwatch)" },
     { name: "Hanzo Shimada" },
-    { name: "Reinhardt", wikiTitle: "Reinhardt (Overwatch)" },
     { name: "Mei", wikiTitle: "Mei (Overwatch)" },
-    { name: "Lúcio", wikiTitle: "Lúcio (Overwatch)" },
-    { name: "Pharah" },
-    { name: "Ana", wikiTitle: "Ana (Overwatch)" },
-    { name: "Junkrat" }, { name: "Roadhog" },
+    { name: "Reinhardt", wikiTitle: "Reinhardt (Overwatch)" },
     // League of Legends
     { name: "Ahri", wikiTitle: "Ahri (League of Legends)" },
     { name: "Yasuo", wikiTitle: "Yasuo (League of Legends)" },
-    { name: "Lee Sin" },
     { name: "Garen", wikiTitle: "Garen (League of Legends)" },
     { name: "Lux", wikiTitle: "Lux (League of Legends)" },
     { name: "Jinx", wikiTitle: "Jinx (League of Legends)" },
@@ -1180,56 +1137,25 @@
     { name: "Caitlyn", wikiTitle: "Caitlyn (League of Legends)" },
     { name: "Akali" },
     { name: "Zed", wikiTitle: "Zed (League of Legends)" },
-    { name: "Teemo" }, { name: "Ezreal" },
-    // Valorant
-    { name: "Phoenix", wikiTitle: "Phoenix (Valorant)" },
-    { name: "Jett", wikiTitle: "Jett (Valorant)" },
-    { name: "Sage", wikiTitle: "Sage (Valorant)" },
-    { name: "Cypher", wikiTitle: "Cypher (Valorant)" },
-    { name: "Reyna", wikiTitle: "Reyna (Valorant)" },
+    { name: "Teemo" }, { name: "Ezreal" }, { name: "Lee Sin" },
     // Cyberpunk
     { name: "V", wikiTitle: "V (Cyberpunk 2077)" },
-    { name: "Johnny Silverhand" }, { name: "Panam Palmer" },
-    { name: "Judy Alvarez" },
-    // Stardew
-    { name: "Abigail", wikiTitle: "Stardew Valley" },
-    { name: "Sebastian", wikiTitle: "Stardew Valley" },
-    // Undertale
-    { name: "Sans", wikiTitle: "Sans (Undertale)" },
-    { name: "Papyrus", wikiTitle: "Papyrus (Undertale)" },
-    { name: "Toriel" }, { name: "Asgore Dreemurr" },
-    { name: "Flowey" }, { name: "Frisk" },
+    { name: "Johnny Silverhand" },
     // Genshin Impact
     { name: "Hu Tao" }, { name: "Raiden Shogun" },
     { name: "Zhongli" }, { name: "Venti" },
-    { name: "Tartaglia" }, { name: "Ganyu" },
-    // Crash Bandicoot
-    { name: "Crash Bandicoot" }, { name: "Coco Bandicoot" },
-    { name: "Doctor Neo Cortex" },
-    // Borderlands
-    { name: "Claptrap" }, { name: "Handsome Jack" },
-    { name: "Lilith", wikiTitle: "Lilith (Borderlands)" },
-    // Kingdom Hearts
-    { name: "Sora", wikiTitle: "Sora (Kingdom Hearts)" },
-    { name: "Riku", wikiTitle: "Riku (Kingdom Hearts)" },
-    { name: "Kairi" },
-    // Standalone / divers
-    { name: "Spyro the Dragon" }, { name: "Pac-Man" },
-    { name: "Mega Man" }, { name: "Zero", wikiTitle: "Zero (Mega Man)" },
-    { name: "Simon Belmont" },
-    { name: "Alucard", wikiTitle: "Alucard (Castlevania)" },
-    { name: "Dracula", wikiTitle: "Dracula (Castlevania)" },
-    { name: "James Sunderland" }, { name: "Pyramid Head" },
-    { name: "Heather Mason" },
+    { name: "Ganyu" },
+    // Crash / Spyro
+    { name: "Crash Bandicoot" },
+    { name: "Spyro the Dragon" },
+    // Standalone iconiques
+    { name: "Pac-Man" }, { name: "Mega Man" },
     { name: "Doomguy" }, { name: "Lara Croft" },
-    { name: "Nathan Drake" }, { name: "Victor Sullivan" },
-    { name: "Chloe Frazer" }, { name: "Aloy" },
-    { name: "Connor", wikiTitle: "Connor (Detroit: Become Human)" },
-    { name: "Markus", wikiTitle: "Markus (Detroit: Become Human)" },
-    { name: "Sam Porter Bridges" },
-    { name: "Rayman" }, { name: "Sam Fisher" },
-    { name: "Adam Jensen" }, { name: "JC Denton" },
-    { name: "Marcus Fenix" }, { name: "Carmen Sandiego" },
+    { name: "Nathan Drake" }, { name: "Aloy" },
+    { name: "Sora", wikiTitle: "Sora (Kingdom Hearts)" },
+    { name: "Sans", wikiTitle: "Sans (Undertale)" },
+    { name: "Pyramid Head" },
+    { name: "Sam Fisher" },
   ];
 
   const POOL_KEY = "fmk_custom_pool";
@@ -1345,10 +1271,14 @@
     return null;
   }
 
-  // Jikan v4 (MyAnimeList) — limit=1, retourne le best-match character.
+  // Jikan v4 (MyAnimeList). order_by=favorites garantit qu'on prend le
+  // perso le plus populaire portant ce nom (ex: 'Goku' = celui de DBZ,
+  // pas un homonyme obscur d'un anime indé). limit=1.
   async function fetchJikanImage(name) {
     try {
-      const url = `https://api.jikan.moe/v4/characters?q=${encodeURIComponent(name)}&limit=1`;
+      const url = `https://api.jikan.moe/v4/characters`
+        + `?q=${encodeURIComponent(name)}`
+        + `&order_by=favorites&sort=desc&limit=1`;
       const res = await fetch(url);
       if (!res.ok) return null;
       const data = await res.json();
@@ -1689,10 +1619,12 @@
       }
     };
 
+    // RE-TIRER (pendant l'assignation) relance directement un nouveau
+    // tirage — pas de retour à idle qui obligeait à recliquer le CTA.
     const reTirer = () => {
       setVerdicts({});
-      setTrio(null);
-      setPhase("idle");
+      if (canDraw) drawNew();
+      else { setTrio(null); setPhase("idle"); }
     };
 
     const assumer = () => {
