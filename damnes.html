@@ -1,0 +1,2773 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>La Tournée des Damnés — Le Cercle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="shared/shared.css" />
+
+<style>
+  body { overflow-x: hidden; }
+
+  .damnes {
+    min-height: 100vh;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 50% 0%, var(--damned-purple) 0%, var(--bg-velvet) 35%, var(--bg-deep) 75%),
+      var(--bg-deep);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Welcome ────────────────────────────────────────────────────────── */
+  .damnes-welcome {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px;
+    text-align: center;
+    gap: 18px;
+  }
+  .damnes-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--gold);
+    letter-spacing: 0.4em;
+    font-size: 13px;
+    opacity: 0.85;
+  }
+  .damnes-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(48px, 8vw, 96px);
+    margin: 0;
+    line-height: 1;
+    background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 35%, var(--copper) 65%, var(--damned-purple) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    filter: drop-shadow(0 6px 24px rgba(61, 30, 92, 0.55));
+    animation: damnes-title-pulse 6s ease-in-out infinite;
+  }
+  @keyframes damnes-title-pulse {
+    0%, 100% { filter: drop-shadow(0 6px 24px rgba(61, 30, 92, 0.55)); }
+    50%      { filter: drop-shadow(0 6px 36px rgba(61, 30, 92, 0.85)) drop-shadow(0 0 24px rgba(255, 107, 138, 0.3)); }
+  }
+  .damnes-tag {
+    font-family: 'Special Elite', monospace;
+    color: var(--neon-rose);
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    margin-bottom: 30px;
+  }
+
+  .damnes-cta-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+    margin-top: 12px;
+  }
+  .damnes-cta-primary {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    position: relative;
+    padding: 6px;
+    background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 50%, var(--gold-deep) 100%);
+    border-radius: 999px;
+    box-shadow:
+      0 0 0 3px var(--bg-deep),
+      0 0 0 5px var(--gold),
+      0 12px 36px rgba(61, 30, 92, 0.5),
+      0 0 56px rgba(61, 30, 92, 0.3);
+    transition: transform 0.12s ease-out, filter 0.2s;
+    overflow: hidden;
+  }
+  .damnes-cta-primary:hover { transform: scale(1.04); filter: brightness(1.05); }
+  .damnes-cta-primary:active { transform: scale(0.97); }
+  .damnes-cta-primary > span {
+    display: block;
+    background: radial-gradient(circle at 30% 30%, var(--copper) 0%, var(--damned-purple) 75%);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 24px;
+    padding: 22px 56px;
+    border-radius: 999px;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.6);
+    border: 2px solid var(--gold);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.55),
+      inset 0 -2px 6px rgba(0, 0, 0, 0.55);
+  }
+  .damnes-cta-secondary {
+    appearance: none;
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .damnes-cta-secondary:hover { background: rgba(212, 175, 55, 0.1); }
+
+  .damnes-back-link {
+    margin-top: 14px;
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.55);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+  }
+  .damnes-back-link:hover { color: var(--gold-pale); }
+
+  /* ── Setup ─────────────────────────────────────────────────────────── */
+  .damnes-setup {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 24px;
+    gap: 18px;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .damnes-setup-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 42px);
+    color: var(--gold-pale);
+    text-align: center;
+    margin: 0 0 4px;
+  }
+  .damnes-counter {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.32em;
+    color: var(--neon-rose);
+    font-size: 14px;
+  }
+  .damnes-add-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+  .damnes-add-input {
+    flex: 1;
+    appearance: none;
+    background: rgba(245, 233, 208, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
+    color: var(--ivory);
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    padding: 12px 14px;
+    outline: none;
+  }
+  .damnes-add-input:focus { border-color: var(--gold); background: rgba(245, 233, 208, 0.08); }
+  .damnes-add-input::placeholder { color: rgba(245, 233, 208, 0.35); }
+  .damnes-add-input.shake { animation: damnes-shake 0.25s; }
+  @keyframes damnes-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  .damnes-add-btn {
+    appearance: none;
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold-deep));
+    color: var(--ink);
+    border: 0;
+    border-radius: 4px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 14px;
+    padding: 12px 22px;
+    cursor: pointer;
+  }
+  .damnes-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .damnes-add-btn:hover:not(:disabled) { filter: brightness(1.06); }
+
+  .damnes-players {
+    width: 100%;
+    min-height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 6px;
+  }
+  .damnes-empty {
+    width: 100%;
+    text-align: center;
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.4);
+    padding: 24px 16px;
+    font-size: 13px;
+  }
+  .damnes-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 8px 8px 14px;
+    background: rgba(245, 233, 208, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 999px;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--ivory);
+  }
+  .damnes-chip-x {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: rgba(255, 107, 138, 0.7);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .damnes-chip-x:hover { background: rgba(255, 107, 138, 0.2); color: var(--neon-rose); }
+
+  .damnes-warn {
+    font-family: 'Special Elite', monospace;
+    color: rgba(255, 107, 138, 0.85);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  .damnes-setup-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .damnes-back-btn {
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .damnes-back-btn:hover { background: rgba(212, 175, 55, 0.1); }
+  .damnes-start-btn {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    background: linear-gradient(180deg, var(--copper), var(--damned-purple));
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 16px;
+    padding: 14px 32px;
+    border-radius: 4px;
+    border: 2px solid var(--gold);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.4),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.45),
+      0 6px 24px rgba(61, 30, 92, 0.5);
+  }
+  .damnes-start-btn:hover:not(:disabled) { filter: brightness(1.08); }
+  .damnes-start-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── HUD (visible pendant le jeu) ──────────────────────────────────── */
+  .damnes-hud {
+    position: relative;
+    z-index: 2;
+    padding: 16px 28px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .damnes-hud-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .damnes-hud-back {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--gold-pale);
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 6px 12px;
+    border-radius: 4px;
+  }
+  .damnes-hud-back:hover { background: rgba(212, 175, 55, 0.1); }
+  .damnes-hud-meta {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--gold-pale);
+  }
+  .damnes-end-btn {
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(255, 107, 138, 0.5);
+    color: var(--neon-rose);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .damnes-end-btn:hover { background: rgba(255, 107, 138, 0.12); }
+
+  .damnes-scores {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212, 175, 55, 0.4) transparent;
+    padding-bottom: 4px;
+  }
+  .damnes-score {
+    flex-shrink: 0;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(245, 233, 208, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 4px;
+    min-width: 70px;
+  }
+  .damnes-score-name {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 12px;
+    color: var(--gold-pale);
+    white-space: nowrap;
+  }
+  .damnes-score-gulps {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    color: var(--ivory);
+    margin-top: 2px;
+  }
+
+  /* ── Stage / manche stub ──────────────────────────────────────────── */
+  .damnes-stage {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+  }
+  .damnes-manche-stub {
+    text-align: center;
+    max-width: 600px;
+    padding: 48px 32px;
+    background: rgba(245, 233, 208, 0.04);
+    border: 1px dashed rgba(212, 175, 55, 0.4);
+    border-radius: 8px;
+  }
+  .damnes-manche-label {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.4em;
+    font-size: 12px;
+    color: var(--neon-rose);
+    margin-bottom: 18px;
+  }
+  .damnes-manche-num {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(48px, 8vw, 80px);
+    color: var(--gold-pale);
+    line-height: 1;
+    margin-bottom: 18px;
+  }
+  .damnes-manche-text {
+    font-family: 'Special Elite', monospace;
+    font-size: 14px;
+    color: rgba(245, 233, 208, 0.7);
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+  .damnes-next-btn {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    background: linear-gradient(180deg, var(--copper) 0%, var(--damned-purple) 100%);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 16px;
+    padding: 14px 28px;
+    border-radius: 4px;
+    border: 2px solid var(--gold);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.4),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.45),
+      0 6px 24px rgba(61, 30, 92, 0.5);
+  }
+  .damnes-next-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .damnes-next-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ── Banners HUD (rules + alliances) ──────────────────────────────── */
+  .damnes-banners {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .damnes-banner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .damnes-banner-rule {
+    background: rgba(255, 107, 138, 0.12);
+    border-left: 3px solid var(--neon-rose);
+    color: rgba(245, 233, 208, 0.9);
+  }
+  .damnes-banner-alliance {
+    background: rgba(212, 175, 55, 0.1);
+    border-left: 3px solid var(--gold);
+    color: rgba(245, 233, 208, 0.9);
+  }
+  .damnes-banner-tag {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.2em;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--gold-pale);
+  }
+  .damnes-banner-text { color: var(--ivory); }
+  .damnes-banner-left {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  /* ── Manche (générique) ───────────────────────────────────────────── */
+  .damnes-manche {
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+    padding: 40px 28px;
+    background: rgba(245, 233, 208, 0.04);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 10px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+    animation: damnes-manche-in 0.35s ease-out;
+  }
+  @keyframes damnes-manche-in {
+    0%   { opacity: 0; transform: scale(0.94); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .damnes-manche-tag {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.4em;
+    font-size: 11px;
+    color: var(--neon-rose);
+    margin-bottom: 18px;
+    opacity: 0.85;
+  }
+  .damnes-manche-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(22px, 3vw, 32px);
+    color: var(--gold-pale);
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+  .damnes-manche-title .vs {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--neon-rose);
+    letter-spacing: 0.2em;
+    font-style: normal;
+    font-size: 0.7em;
+    margin: 0 12px;
+  }
+  .damnes-manche-body {
+    font-family: 'Special Elite', monospace;
+    font-size: 16px;
+    color: rgba(245, 233, 208, 0.85);
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .damnes-manche-sub {
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    color: rgba(245, 233, 208, 0.65);
+    margin-bottom: 22px;
+    letter-spacing: 0.04em;
+  }
+  .damnes-manche-sub b {
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: 0.1em;
+    padding: 0 2px;
+  }
+
+  .damnes-target {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(36px, 5vw, 56px);
+    color: var(--gold-pale);
+    text-shadow: 0 0 16px rgba(212, 175, 55, 0.4);
+  }
+  .damnes-voter {
+    color: var(--gold-pale);
+  }
+  .damnes-voter b {
+    background: rgba(255, 107, 138, 0.2);
+    padding: 2px 10px;
+    border-radius: 4px;
+  }
+  .damnes-voter-progress { color: rgba(245, 233, 208, 0.5); }
+
+  /* Action rows / grids */
+  .damnes-action-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .damnes-action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+  }
+  .damnes-pick-btn {
+    appearance: none;
+    cursor: pointer;
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold-deep));
+    color: var(--ink);
+    border: 0;
+    border-radius: 4px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.16em;
+    font-size: 14px;
+    padding: 14px 18px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.55),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.35);
+  }
+  .damnes-pick-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+  .damnes-pick-btn.alt {
+    background: linear-gradient(180deg, var(--copper), var(--damned-purple));
+    color: var(--gold-pale);
+    border: 1px solid var(--gold);
+  }
+
+  /* Cascade */
+  .damnes-cascade-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 360px;
+  }
+  .damnes-cascade-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: rgba(245, 233, 208, 0.06);
+    border-left: 3px solid var(--gold-deep);
+    border-radius: 3px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ivory);
+  }
+  .damnes-cascade-list li:nth-child(1) { border-left-color: var(--gold); }
+  .damnes-cascade-list li:nth-child(2) { border-left-color: var(--copper); }
+  .damnes-cascade-list li:nth-child(3) { border-left-color: var(--damned-purple); }
+  .damnes-dose {
+    font-family: 'DM Mono', monospace;
+    color: var(--neon-rose);
+    background: rgba(0, 0, 0, 0.35);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-style: normal;
+  }
+
+  /* Rule */
+  .damnes-rule-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(20px, 2.6vw, 26px);
+    color: var(--gold-pale);
+    line-height: 1.4;
+    margin-bottom: 24px;
+    padding: 18px 20px;
+    background: rgba(255, 107, 138, 0.08);
+    border-left: 3px solid var(--neon-rose);
+    border-radius: 4px;
+  }
+
+  /* Confession */
+  .damnes-confession-q {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(20px, 2.6vw, 28px);
+    color: var(--ivory);
+    line-height: 1.45;
+    margin: 18px 0 22px;
+    padding: 0 20px;
+  }
+
+  /* Roulette */
+  .damnes-roulette-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin: 18px 0 24px;
+  }
+  .damnes-roulette-cell {
+    aspect-ratio: 1;
+    background: rgba(0, 0, 0, 0.45);
+    border: 2px solid var(--gold-deep);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    color: rgba(245, 233, 208, 0.4);
+    transition: all 0.05s linear;
+  }
+  .damnes-roulette-cell.active {
+    background: rgba(255, 107, 138, 0.25);
+    border-color: var(--neon-rose);
+    color: var(--gold-pale);
+    box-shadow: 0 0 16px rgba(255, 107, 138, 0.5);
+    transform: scale(1.04);
+  }
+  .damnes-roulette-cell.culsec {
+    background: var(--blood);
+    color: var(--ivory);
+    border-color: var(--gold);
+    box-shadow: 0 0 32px rgba(139, 10, 20, 0.7);
+    animation: damnes-culsec-flash 0.4s 3;
+  }
+  @keyframes damnes-culsec-flash {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.12); }
+  }
+  @media (max-width: 540px) {
+    .damnes-roulette-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Twist */
+  .damnes-twist-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(18px, 2.4vw, 24px);
+    color: var(--gold-pale);
+    line-height: 1.4;
+    margin-bottom: 24px;
+    padding: 18px 20px;
+    background: rgba(61, 30, 92, 0.25);
+    border-left: 3px solid var(--damned-purple);
+    border-radius: 4px;
+  }
+
+  .damnes-distribute-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 340px;
+    margin: 0 auto 18px;
+  }
+  .damnes-distribute-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: rgba(245, 233, 208, 0.05);
+    border-radius: 4px;
+  }
+  .damnes-distribute-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--ivory);
+  }
+  .damnes-distribute-controls { display: flex; align-items: center; gap: 8px; }
+  .damnes-distribute-controls button {
+    appearance: none;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid var(--gold-deep);
+    color: var(--gold-pale);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .damnes-distribute-controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .damnes-distribute-n {
+    font-family: 'DM Mono', monospace;
+    color: var(--neon-rose);
+    min-width: 24px;
+    text-align: center;
+  }
+
+  /* Manche post-resolve */
+  .damnes-resolved {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    padding: 36px 28px;
+    background: rgba(245, 233, 208, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 10px;
+    animation: damnes-manche-in 0.3s ease-out;
+  }
+  .damnes-manche-result-label {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.4em;
+    font-size: 11px;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+  .damnes-result-text {
+    font-family: 'Special Elite', monospace;
+    color: var(--gold-pale);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .damnes-result-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 340px;
+  }
+  .damnes-result-row {
+    display: grid;
+    grid-template-columns: 1fr 24px auto;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(255, 107, 138, 0.08);
+    border-left: 3px solid var(--neon-rose);
+    border-radius: 3px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--ivory);
+  }
+  .damnes-result-row.neg {
+    background: rgba(212, 175, 55, 0.1);
+    border-left-color: var(--gold);
+  }
+  .damnes-result-name { text-align: left; }
+  .damnes-result-arrow {
+    color: var(--gold-deep);
+    text-align: center;
+    font-style: normal;
+  }
+  .damnes-result-gulps {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    color: var(--neon-rose);
+    font-style: normal;
+    text-align: right;
+  }
+
+  /* Accents par type (Phase 3 — plus marqués) */
+  .damnes-manche-duel       { border-color: var(--gold-deep);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 32px rgba(212, 175, 55, 0.15); }
+  .damnes-manche-duel .damnes-manche-tag       { color: var(--gold); }
+
+  .damnes-manche-vote       { border-color: var(--neon-rose);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 32px rgba(255, 107, 138, 0.18); }
+  .damnes-manche-vote .damnes-manche-tag       { color: var(--neon-rose); }
+
+  .damnes-manche-sniper     { border-color: var(--gold-pale);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 36px rgba(240, 201, 135, 0.22); }
+  .damnes-manche-sniper .damnes-manche-tag     { color: var(--gold-pale); }
+
+  .damnes-manche-cascade    { border-color: var(--copper);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 36px rgba(193, 75, 75, 0.22); }
+  .damnes-manche-cascade .damnes-manche-tag    { color: var(--copper); filter: brightness(1.3); }
+
+  .damnes-manche-rule       { border-color: var(--neon-rose);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 107, 138, 0.25); }
+  .damnes-manche-rule .damnes-manche-tag       { color: var(--neon-rose); }
+
+  .damnes-manche-confession { border-color: var(--gold);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 40px rgba(212, 175, 55, 0.3); }
+  .damnes-manche-confession .damnes-manche-tag { color: var(--gold); }
+
+  .damnes-manche-roulette   { border-color: var(--neon-red);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(255, 43, 74, 0.35);
+    animation: damnes-manche-in 0.35s ease-out, damnes-roulette-tension 2.5s ease-in-out infinite; }
+  .damnes-manche-roulette .damnes-manche-tag   { color: var(--neon-rose); letter-spacing: 0.5em; }
+  @keyframes damnes-roulette-tension {
+    0%, 100% { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(255, 43, 74, 0.35); }
+    50%      { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 60px rgba(255, 43, 74, 0.55); }
+  }
+
+  .damnes-manche-twist      { border-color: var(--damned-purple);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(61, 30, 92, 0.55); }
+  .damnes-manche-twist .damnes-manche-tag      { color: var(--damned-purple); filter: brightness(1.8); }
+
+  .damnes-manche-karma      { border-color: var(--blood);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(139, 10, 20, 0.5);
+    animation: damnes-manche-in 0.35s ease-out, damnes-karma-pulse 2.2s ease-in-out infinite; }
+  .damnes-manche-karma .damnes-manche-tag      { color: var(--blood); filter: brightness(1.5); }
+  @keyframes damnes-karma-pulse {
+    0%, 100% { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(139, 10, 20, 0.5); }
+    50%      { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 64px rgba(139, 10, 20, 0.75); }
+  }
+
+  .damnes-manche-alliance   { border-color: var(--gold);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 40px rgba(212, 175, 55, 0.3); }
+  .damnes-manche-alliance .damnes-manche-tag   { color: var(--gold); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .damnes-manche-roulette,
+    .damnes-manche-karma { animation: none; }
+  }
+
+  /* ── End ─────────────────────────────────────────────────────────── */
+  .damnes-end {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 24px;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 24px;
+  }
+  .damnes-end-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(36px, 5vw, 54px);
+    text-align: center;
+    margin: 0;
+    background: linear-gradient(180deg, var(--gold-pale), var(--damned-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .damnes-end-stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.75);
+    font-size: 14px;
+    letter-spacing: 0.06em;
+  }
+  .damnes-podium {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .damnes-podium h3 {
+    margin: 0 0 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-align: center;
+    font-size: 14px;
+  }
+  .damnes-podium-row {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    background: rgba(245, 233, 208, 0.05);
+    border-left: 4px solid var(--gold-deep);
+    border-radius: 3px;
+  }
+  .damnes-podium-row.pos-1 { border-left-color: var(--gold); }
+  .damnes-podium-row.pos-2 { border-left-color: var(--copper); }
+  .damnes-podium-row.pos-3 { border-left-color: var(--damned-purple); }
+  .damnes-pos {
+    font-family: 'DM Mono', monospace;
+    color: var(--gold);
+    font-size: 16px;
+  }
+  .damnes-pos-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ivory);
+  }
+  .damnes-pos-gulps {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.12em;
+    font-size: 13px;
+    color: var(--neon-rose);
+  }
+
+  .damnes-classement {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .damnes-classement h3 {
+    margin: 0 0 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-align: center;
+    font-size: 13px;
+  }
+  .damnes-classement-list { list-style: none; padding: 0; margin: 0; }
+  .damnes-classement-row {
+    display: grid;
+    grid-template-columns: minmax(80px, 22%) 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--ivory);
+  }
+  .damnes-classement-name { font-size: 14px; }
+  .damnes-classement-bar {
+    height: 8px;
+    background: linear-gradient(90deg, var(--copper), var(--neon-rose));
+    border-radius: 999px;
+    box-shadow: 0 0 10px rgba(255, 107, 138, 0.3);
+    transition: width 0.3s;
+  }
+  .damnes-classement-gulps {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .damnes-memorable {
+    width: 100%;
+    background: rgba(61, 30, 92, 0.2);
+    border: 1px solid var(--damned-purple);
+    border-radius: 8px;
+    padding: 18px 20px;
+    text-align: center;
+  }
+  .damnes-memorable h3 {
+    margin: 0 0 8px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    font-size: 13px;
+  }
+  .damnes-memorable-tag {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.4em;
+    font-size: 11px;
+    color: var(--neon-rose);
+    margin-bottom: 6px;
+  }
+  .damnes-memorable-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ivory);
+    line-height: 1.4;
+  }
+  .damnes-end-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .damnes-end-actions button,
+  .damnes-end-actions a {
+    appearance: none;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 0;
+  }
+  .damnes-end-save {
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold-deep));
+    color: var(--ink);
+  }
+  .damnes-end-save:hover:not(:disabled) { filter: brightness(1.06); }
+  .damnes-end-save:disabled { opacity: 0.6; cursor: default; }
+  .damnes-end-new {
+    background: linear-gradient(180deg, var(--copper), var(--damned-purple));
+    color: var(--gold-pale);
+    border: 2px solid var(--gold);
+  }
+  .damnes-end-new:hover { filter: brightness(1.08); }
+  .damnes-end-hub {
+    background: transparent;
+    color: var(--gold-pale);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    display: inline-flex;
+    align-items: center;
+  }
+  .damnes-end-hub:hover { background: rgba(212, 175, 55, 0.1); }
+
+  /* ── Custom editor (Phase 4) ──────────────────────────────────────── */
+  .damnes-custom {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 24px;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 16px;
+  }
+  .damnes-custom-head { text-align: center; width: 100%; }
+  .damnes-custom-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 40px);
+    color: var(--gold-pale);
+    margin: 0 0 6px;
+  }
+  .damnes-custom-sub {
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.6);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  .damnes-custom-tabs {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    margin-top: 6px;
+  }
+  .damnes-custom-tab {
+    flex: 1;
+    appearance: none;
+    background: rgba(245, 233, 208, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    color: rgba(245, 233, 208, 0.7);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .damnes-custom-tab:hover { color: var(--gold-pale); }
+  .damnes-custom-tab.active {
+    background: linear-gradient(180deg, var(--copper), var(--damned-purple));
+    border-color: var(--gold);
+    color: var(--ivory);
+  }
+  .damnes-list-count {
+    display: inline-block;
+    margin-left: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--gold);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+
+  .damnes-list-editor {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .damnes-list-title {
+    margin: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    font-size: 14px;
+  }
+  .damnes-list-hint {
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.55);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .damnes-list-items {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 6px;
+    padding: 10px;
+    max-height: 320px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .damnes-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    background: rgba(245, 233, 208, 0.05);
+    border-left: 2px solid var(--gold-deep);
+    border-radius: 3px;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--ivory);
+  }
+  .damnes-list-text { flex: 1; line-height: 1.4; }
+  .damnes-list-remove {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: rgba(255, 107, 138, 0.7);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .damnes-list-remove:hover { background: rgba(255, 107, 138, 0.2); color: var(--neon-rose); }
+  .damnes-list-io { display: flex; gap: 8px; }
+  .damnes-io-btn {
+    flex: 1;
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .damnes-io-btn:hover:not(:disabled) { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
+  .damnes-io-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  @media (max-width: 720px) {
+    .damnes-hud { padding: 12px 16px; }
+    .damnes-hud-row { gap: 8px; }
+    .damnes-add-row { flex-direction: column; }
+    .damnes-add-btn { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .damnes-title { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script type="text/babel" data-presets="react" src="shared/shared.js"></script>
+
+  <script type="text/babel" data-presets="react">
+  const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+  const SESSION_KEY = "damnes_session";
+  const CUSTOM_CONFESSIONS_KEY = "damnes_custom_confessions";
+  const CUSTOM_RULES_KEY = "damnes_custom_rules";
+  const PHASE_WELCOME = "welcome";
+  const PHASE_SETUP = "setup";
+  const PHASE_PLAYING = "playing";
+  const PHASE_END = "end";
+  const PHASE_CUSTOM = "custom";
+
+  function emptySession() {
+    return {
+      players: [],
+      active_rules: [],
+      alliances: [],
+      manche_count: 0,
+      history: [],
+      current_manche: null,
+    };
+  }
+
+  function uuid() {
+    if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+    return "p_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+  }
+
+  // ═══ Datasets préfaits ═══════════════════════════════════════════════
+  const QUESTIONS_VOTE = [
+    "Qui finira le plus en couple avec son thérapeute ?",
+    "Qui est le plus susceptible de finir en prison pour un truc débile ?",
+    "Qui ferait le pire colocataire ?",
+    "Qui a déjà fait pipi dans une piscine ?",
+    "Qui aura le plus gros bide à 50 ans ?",
+    "Qui se paierait un coach de vie sur Insta ?",
+    "Qui craquerait en premier sur l'île aux célibataires ?",
+    "Qui pleurerait le plus à son propre mariage ?",
+    "Qui est le plus toxique en relation ?",
+    "Qui serait le plus capable de monter une secte ?",
+    "Qui meurt en premier dans un film d'horreur ?",
+    "Qui a probablement déjà volé un truc à un pote ?",
+    "Qui finit clochard en premier ?",
+    "Qui est le pire menteur du groupe ?",
+    "Qui s'est déjà fait larguer par texto le matin d'un anniversaire ?",
+  ];
+
+  const QUESTIONS_CONFESSION = [
+    "Quel est le truc le plus honteux que tu as cherché sur Google cette année ?",
+    "Cite trois personnes dans cette pièce que tu kifferais bien plus que ton ex actuel.",
+    "Décris ta dernière catastrophe digestive en public.",
+    "Quelle est la pire excuse que tu aies jamais inventée pour sécher quelque chose ?",
+    "Dans cette pièce, qui as-tu déjà furtivement détesté à un moment ?",
+    "Quel est le mensonge le plus gros que tu as fait passer à tes parents ?",
+    "Combien de fois as-tu pleuré dans les chiottes du boulot cette année ?",
+    "Cite la chanson la plus honteuse de ta playlist secrète.",
+    "Décris ta routine \"personne ne me regarde, je peux faire le con\".",
+    "Quelle drogue tu testerais en sachant que c'est gratuit et sans conséquence ?",
+    "Qui dans cette pièce ferait le pire ex et pourquoi ?",
+    "Quel est ton kink le plus inavouable ?",
+    "Combien de personnes ont vu une vidéo intime de toi, même partielle ?",
+    "Quelle est la pire chose qu'un partenaire t'ait demandé au lit ?",
+    "As-tu déjà fait pipi dans une piscine, et précise quel modèle de piscine.",
+    "Quel collègue tu trompes mentalement le plus régulièrement ?",
+    "Décris la fois où tu as eu le plus honte de tes parents.",
+    "Quel film/série tu prétends aimer alors que tu trouves ça nul ?",
+    "Quel est le truc le plus pathétique que tu as fait quand tu étais bourré ?",
+    "À quel point tu as menti sur ton CV en pourcentage ?",
+    "Quelle insulte tu lances quand t'es seul dans ta voiture ?",
+    "Quel est le pire compliment qu'on t'ait fait ?",
+    "As-tu déjà espéré la mort de quelqu'un dans cette pièce ? Un seul nom suffit.",
+    "Quel est ton ratio de Tinder réel vs avoué ?",
+    "Cite un truc que tu n'as JAMAIS dit à personne, même ton meilleur ami.",
+    "Décris la dernière fois où tu t'es senti vraiment vieux.",
+    "Quelle est la pire boulette que tu aies dite à une grand-mère ?",
+    "Combien tu factures ton silence sur le secret le plus juteux que tu connais ?",
+    "Quelle est la chose la plus illégale que tu aies déjà faite ?",
+    "Cite un truc que tu fais quotidiennement et dont tu auras vraiment honte dans 10 ans.",
+  ];
+
+  const RULES_PERSISTANT = [
+    "Interdit de prononcer le mot \"truc\" — infraction = cul sec.",
+    "Tout le monde parle en chuchotant — infraction = 2 gorgées.",
+    "Interdit de pointer du doigt — 1 gorgée par infraction.",
+    "Obligation de finir chaque phrase par \"mon poulet\".",
+    "Interdit de dire \"je\" — utiliser \"votre serviteur\" — 2 gorgées sinon.",
+    "Personne ne peut dire le prénom des autres — 2 gorgées par infraction.",
+    "Quand quelqu'un boit, il faut dire \"à la santé du Damné\" — sinon 1 gorgée.",
+    "Interdit de croiser les bras — 1 gorgée par occurrence.",
+    "Le plus jeune doit boire avant chaque autre — sinon 2 gorgées au fautif.",
+    "Toute affirmation doit finir par \"soi-disant\" — 1 gorgée d'infraction.",
+    "Le mot \"alcool\" est tabou — cul sec si dit.",
+    "Tout le monde adopte un accent (au choix) — 2 gorgées si on lâche.",
+    "Personne ne peut sourire — 2 gorgées si pris.",
+    "Interdit de regarder dans les yeux — 1 gorgée d'infraction.",
+    "Tout le monde boit à deux mains, comme à la messe — 2 gorgées sinon.",
+    "Il faut applaudir après chaque manche — 1 gorgée si oublié.",
+    "Le plus vieux est désigné \"Sage\" — sa parole est loi, 3 gorgées si désobéi.",
+    "Interdit de dire \"oui\" ou \"non\" — 2 gorgées d'infraction.",
+    "Interdit de poser le verre sur la table — 1 gorgée par infraction.",
+    "Tout le monde commence ses phrases par \"À mon humble avis\" — 1 gorgée sinon.",
+  ];
+
+  const MINIGAMES_DUEL = [
+    "Pierre-feuille-ciseaux mental : chacun pense à un truc, on compare.",
+    "Bras de fer regard — premier qui cligne perd.",
+    "Le plus rapide à dire \"Les chaussettes de l'archiduchesse sont-elles sèches ?\".",
+    "Le plus rapide à citer 5 marques de chips.",
+    "Compter à rebours de 30 à 1 par 3 le plus vite.",
+    "Concours de grimace — qui fait pleurer l'autre de rire en premier.",
+    "Imitation du dernier ex/crush — meilleure imitation gagne (vote des autres).",
+    "Le plus convaincant en mentant sur sa profession — vote des autres.",
+  ];
+
+  // Critères Sniper : pick(players) renvoie le playerId qui matche, ou null.
+  const CRITERES_SNIPER = [
+    {
+      text: "Le prénom le plus long boit",
+      dose: 2,
+      pick: (ps) => {
+        const m = ps.reduce((a, b) => a.name.length >= b.name.length ? a : b);
+        return m.id;
+      },
+    },
+    {
+      text: "Le prénom le plus court boit",
+      dose: 4,
+      pick: (ps) => {
+        const m = ps.reduce((a, b) => a.name.length <= b.name.length ? a : b);
+        return m.id;
+      },
+    },
+    {
+      text: "Le prénom avec le plus de voyelles boit",
+      dose: 2,
+      pick: (ps) => {
+        const v = (s) => (s.match(/[aeiouyAEIOUY]/g) || []).length;
+        const m = ps.reduce((a, b) => v(a.name) >= v(b.name) ? a : b);
+        return m.id;
+      },
+    },
+    {
+      text: "Le prénom avec le moins de voyelles boit",
+      dose: 3,
+      pick: (ps) => {
+        const v = (s) => (s.match(/[aeiouyAEIOUY]/g) || []).length;
+        const m = ps.reduce((a, b) => v(a.name) <= v(b.name) ? a : b);
+        return m.id;
+      },
+    },
+    {
+      text: "Le prénom commençant par la lettre la plus avancée dans l'alphabet boit",
+      dose: 2,
+      pick: (ps) => {
+        const m = ps.reduce((a, b) => (a.name[0] || "").toUpperCase() >= (b.name[0] || "").toUpperCase() ? a : b);
+        return m.id;
+      },
+    },
+    {
+      text: "Le prénom commençant par la lettre la moins avancée dans l'alphabet boit",
+      dose: 2,
+      pick: (ps) => {
+        const m = ps.reduce((a, b) => (a.name[0] || "").toUpperCase() <= (b.name[0] || "").toUpperCase() ? a : b);
+        return m.id;
+      },
+    },
+    {
+      text: "Le premier joueur ajouté à la tournée boit",
+      dose: 3,
+      pick: (ps) => ps[0].id,
+    },
+    {
+      text: "Le dernier joueur ajouté à la tournée boit",
+      dose: 3,
+      pick: (ps) => ps[ps.length - 1].id,
+    },
+    {
+      text: "Le joueur avec le plus de gorgées jusqu'ici reboit",
+      dose: 2,
+      pick: (ps) => {
+        const m = ps.reduce((a, b) => a.gulps >= b.gulps ? a : b);
+        return m.id;
+      },
+    },
+    {
+      text: "Le joueur avec le moins de gorgées jusqu'ici boit (la justice doit gicler)",
+      dose: 4,
+      pick: (ps) => {
+        const m = ps.reduce((a, b) => a.gulps <= b.gulps ? a : b);
+        return m.id;
+      },
+    },
+  ];
+
+  // Twists : kind = 'auto' | 'designation' | 'pick' | 'distribute'.
+  // Pour les 'auto', la résolution est calculée immédiatement à partir
+  // de l'état/history. Pour les autres, l'UI capture une action utilisateur.
+  const TEMPLATES_TWIST = [
+    {
+      kind: "auto",
+      text: "TWIST : tous ceux qui ont bu à la dernière manche, rebuvez le double.",
+      compute: (state) => {
+        const last = state.history.slice().reverse().find(h => h.summary && h.summary.length);
+        if (!last) return [];
+        const gulps = (last.summary || []).filter(s => s.kind === "gulp");
+        return gulps.map(g => ({ playerId: g.playerId, n: g.n * 2 }));
+      },
+    },
+    {
+      kind: "auto",
+      text: "INVERSION : le moins arrosé boit l'écart avec le leader. La balance gicle.",
+      compute: (state) => {
+        const sorted = [...state.players].sort((a, b) => a.gulps - b.gulps);
+        const min = sorted[0]; const max = sorted[sorted.length - 1];
+        const gap = max.gulps - min.gulps;
+        if (gap <= 0) return [];
+        return [{ playerId: min.id, n: gap }];
+      },
+    },
+    {
+      kind: "auto",
+      text: "AMNÉSIE COLLECTIVE : tout le monde boit 1, sauf les 2 plus arrosés (oubliés du destin).",
+      compute: (state) => {
+        const sorted = [...state.players].sort((a, b) => b.gulps - a.gulps);
+        const exempt = new Set(sorted.slice(0, 2).map(p => p.id));
+        return state.players
+          .filter(p => !exempt.has(p.id))
+          .map(p => ({ playerId: p.id, n: 1 }));
+      },
+    },
+    {
+      kind: "auto",
+      text: "PETIT RAPPEL : le dernier joueur ajouté à la tournée boit 3 (bizutage différé).",
+      compute: (state) => {
+        const last = state.players[state.players.length - 1];
+        return [{ playerId: last.id, n: 3 }];
+      },
+    },
+    {
+      kind: "auto",
+      text: "QUITTE OU DOUBLE : tout le monde boit la moyenne du groupe (arrondie au sup).",
+      compute: (state) => {
+        const total = state.players.reduce((s, p) => s + p.gulps, 0);
+        const avg = Math.ceil(total / Math.max(1, state.players.length));
+        return state.players.map(p => ({ playerId: p.id, n: avg }));
+      },
+    },
+    {
+      kind: "auto",
+      text: "MARÉE NOIRE : si la dernière manche a fait moins de 3 gorgées au total, doublez tout. Sinon, on respire.",
+      compute: (state) => {
+        const last = state.history.slice().reverse().find(h => h.summary && h.summary.length);
+        if (!last) return [];
+        const gulps = (last.summary || []).filter(s => s.kind === "gulp");
+        const total = gulps.reduce((s, g) => s + g.n, 0);
+        if (total >= 3) return [];
+        return gulps.map(g => ({ playerId: g.playerId, n: g.n }));
+      },
+    },
+    {
+      kind: "auto",
+      text: "ZÉRO DÉFAUT : le moins arrosé efface 2 de son compteur. Cadeau du Diable.",
+      compute: (state) => {
+        const sorted = [...state.players].sort((a, b) => a.gulps - b.gulps);
+        const min = sorted[0];
+        return [{ playerId: min.id, n: -Math.min(2, min.gulps) }];
+      },
+    },
+    {
+      kind: "designation",
+      text: "DÉLATION : chacun désigne un joueur. Le plus désigné boit 5.",
+      dose: 5,
+    },
+    {
+      kind: "pick",
+      text: "JUSTICE POÉTIQUE : le moins arrosé fait boire 4 à qui il veut.",
+      dose: 4,
+      pickerOf: (state) => {
+        const sorted = [...state.players].sort((a, b) => a.gulps - b.gulps);
+        return sorted[0].id;
+      },
+    },
+    {
+      kind: "distribute",
+      text: "INSPIRATION DIVINE : un joueur tiré au sort distribue 6 gorgées comme il veut.",
+      total: 6,
+      pickerOf: (state) => {
+        return state.players[Math.floor(Math.random() * state.players.length)].id;
+      },
+    },
+  ];
+
+  // ═══ Helpers ═════════════════════════════════════════════════════════
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function pickWeighted(items, weights) {
+    const total = weights.reduce((s, w) => s + w, 0);
+    let r = Math.random() * total;
+    for (let i = 0; i < items.length; i++) {
+      r -= weights[i];
+      if (r <= 0) return items[i];
+    }
+    return items[items.length - 1];
+  }
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function pickPlayers(players, n) {
+    return shuffle(players).slice(0, n);
+  }
+  function getPlayer(state, id) {
+    return state.players.find(p => p.id === id);
+  }
+
+  // ═══ Engine ══════════════════════════════════════════════════════════
+  // Pondérations (cf. brief). 'requires' optionnel : type indispo si false.
+  const MANCHE_TYPES = [
+    { type: "duel",       weight: 15 },
+    { type: "vote",       weight: 15 },
+    { type: "sniper",     weight: 12 },
+    { type: "cascade",    weight: 10 },
+    { type: "rule",       weight: 10 },
+    { type: "confession", weight: 10 },
+    { type: "roulette",   weight: 8  },
+    { type: "twist",      weight: 7,  requires: (s) => s.history.length > 0 },
+    { type: "karma",      weight: 8,  requires: (s) => s.players.some(p => (p.karma || 0) > 0) },
+    { type: "alliance",   weight: 5  },
+  ];
+
+  function buildAvailableTypes(session) {
+    let types = MANCHE_TYPES.filter(t => !t.requires || t.requires(session));
+    // Échauffement : 3 premières manches → biais types simples
+    if (session.manche_count <= 3) {
+      const easy = types.filter(t => ["duel", "sniper", "cascade"].includes(t.type));
+      if (easy.length > 0) types = easy;
+    }
+    // Évite répéter le type juste précédent si possible
+    const lastEntry = session.history[session.history.length - 1];
+    const lastType = lastEntry ? lastEntry.type : null;
+    if (lastType && types.length > 1) {
+      const filtered = types.filter(t => t.type !== lastType);
+      if (filtered.length > 0) types = filtered;
+    }
+    return types;
+  }
+
+  function pickMancheType(session) {
+    const types = buildAvailableTypes(session);
+    return pickWeighted(types.map(t => t.type), types.map(t => t.weight));
+  }
+
+  // Construit la manche initiale (avant action user).
+  function buildManche(type, session, content) {
+    const ps = session.players;
+    switch (type) {
+      case "duel": {
+        const [a, b] = pickPlayers(ps, 2);
+        return {
+          type, playerA: a.id, playerB: b.id,
+          minigame: pickRandom(MINIGAMES_DUEL),
+          dose: randInt(2, 4),
+        };
+      }
+      case "vote": {
+        return {
+          type, question: pickRandom(content.votes),
+          dose: randInt(3, 5),
+          voterIdx: 0,
+          voterChoices: {}, // voterId -> votedForId
+        };
+      }
+      case "sniper": {
+        const c = pickRandom(CRITERES_SNIPER);
+        const target = c.pick(ps);
+        return { type, criteria: c.text, dose: c.dose, target };
+      }
+      case "cascade": {
+        const n = randInt(3, Math.min(5, ps.length));
+        const sequence = pickPlayers(ps, n).map((p, i) => ({ playerId: p.id, dose: i + 1 }));
+        return { type, sequence };
+      }
+      case "rule": {
+        return {
+          type, text: pickRandom(content.rules),
+          duration: randInt(3, 6),
+        };
+      }
+      case "confession": {
+        const target = pickRandom(ps);
+        return {
+          type, question: pickRandom(content.confessions),
+          target: target.id, dose: 5,
+        };
+      }
+      case "roulette": {
+        const target = pickRandom(ps);
+        const culsecIdx = randInt(0, 5);
+        return { type, target: target.id, culsecIdx };
+      }
+      case "twist": {
+        const tpl = pickRandom(TEMPLATES_TWIST);
+        const m = { type, kind: tpl.kind, text: tpl.text };
+        if (tpl.kind === "auto") {
+          m.computeKey = TEMPLATES_TWIST.indexOf(tpl);
+        } else if (tpl.kind === "designation") {
+          m.dose = tpl.dose;
+          m.designerIdx = 0;
+          m.designations = {}; // designerId -> targetId
+        } else if (tpl.kind === "pick") {
+          m.dose = tpl.dose;
+          m.pickerId = tpl.pickerOf(session);
+        } else if (tpl.kind === "distribute") {
+          m.total = tpl.total;
+          m.pickerId = tpl.pickerOf(session);
+          m.distribution = {}; // playerId -> n
+        }
+        return m;
+      }
+      case "karma": {
+        const sorted = [...ps].sort((a, b) => (b.karma || 0) - (a.karma || 0));
+        const target = sorted[0];
+        return { type, target: target.id, dose: randInt(4, 6) };
+      }
+      case "alliance": {
+        const [a, b] = pickPlayers(ps, 2);
+        return { type, playerA: a.id, playerB: b.id, duration: 3 };
+      }
+    }
+    return { type };
+  }
+
+  // Propage les gorgées via les alliances actives.
+  // Renvoie un array d'effets { playerId, n }.
+  function expandWithAlliances(session, playerId, n) {
+    const out = [{ playerId, n }];
+    if (n <= 0) return out;
+    for (const a of session.alliances) {
+      if (a.playerIds.includes(playerId)) {
+        const partner = a.playerIds.find(id => id !== playerId);
+        out.push({ playerId: partner, n: Math.ceil(n / 2) });
+      }
+    }
+    return out;
+  }
+
+  // Applique un summary sur les players. summary = [{kind:'gulp'|'karma'|'reset_karma', playerId, n}]
+  function applySummary(session, summary) {
+    const playersById = new Map(session.players.map(p => [p.id, { ...p }]));
+    summary.forEach(s => {
+      const p = playersById.get(s.playerId);
+      if (!p) return;
+      if (s.kind === "gulp") p.gulps = Math.max(0, p.gulps + s.n);
+      else if (s.kind === "karma") p.karma = (p.karma || 0) + s.n;
+      else if (s.kind === "reset_karma") p.karma = 0;
+    });
+    return { ...session, players: session.players.map(p => playersById.get(p.id)) };
+  }
+
+  // Décrémente les rules + alliances actives, retire celles à 0.
+  function tickTimers(session) {
+    return {
+      ...session,
+      active_rules: session.active_rules
+        .map(r => ({ ...r, manchesLeft: r.manchesLeft - 1 }))
+        .filter(r => r.manchesLeft > 0),
+      alliances: session.alliances
+        .map(a => ({ ...a, manchesLeft: a.manchesLeft - 1 }))
+        .filter(a => a.manchesLeft > 0),
+    };
+  }
+
+  // Résolution d'une manche : à partir du manche + action user, calcule
+  // summary (effets sur players) et mutations sur active_rules/alliances.
+  function resolveMancheLogic(session, manche, action) {
+    let summary = [];
+    let rulesToAdd = [];
+    let alliancesToAdd = [];
+
+    const addGulps = (playerId, n) => {
+      expandWithAlliances(session, playerId, n).forEach(e => {
+        summary.push({ kind: "gulp", playerId: e.playerId, n: e.n });
+      });
+    };
+
+    switch (manche.type) {
+      case "duel": {
+        const loser = action.winner === manche.playerA ? manche.playerB : manche.playerA;
+        addGulps(loser, manche.dose);
+        break;
+      }
+      case "vote": {
+        const counts = {};
+        Object.values(manche.voterChoices).forEach(votedId => {
+          counts[votedId] = (counts[votedId] || 0) + 1;
+        });
+        const max = Math.max(0, ...Object.values(counts));
+        const losers = Object.keys(counts).filter(id => counts[id] === max);
+        losers.forEach(id => addGulps(id, manche.dose));
+        // Karma : voters qui ont voté pour un loser
+        Object.entries(manche.voterChoices).forEach(([voterId, votedId]) => {
+          if (losers.includes(votedId) && voterId !== votedId) {
+            summary.push({ kind: "karma", playerId: voterId, n: 1 });
+          }
+        });
+        break;
+      }
+      case "sniper": {
+        addGulps(manche.target, manche.dose);
+        break;
+      }
+      case "cascade": {
+        manche.sequence.forEach(s => addGulps(s.playerId, s.dose));
+        break;
+      }
+      case "rule": {
+        rulesToAdd.push({
+          id: uuid(), text: manche.text,
+          manchesLeft: manche.duration + 1, // +1 car on tick au début de la manche suivante
+        });
+        break;
+      }
+      case "confession": {
+        if (action.choice === "drank") addGulps(manche.target, manche.dose);
+        // 'answered' = pas de gorgées
+        break;
+      }
+      case "roulette": {
+        if (action.result === "culsec") addGulps(manche.target, 99); // 99 = cul sec symbolique
+        break;
+      }
+      case "twist": {
+        if (manche.kind === "auto") {
+          const tpl = TEMPLATES_TWIST[manche.computeKey];
+          const eff = tpl.compute(session);
+          eff.forEach(e => {
+            if (e.n > 0) addGulps(e.playerId, e.n);
+            else if (e.n < 0) summary.push({ kind: "gulp", playerId: e.playerId, n: e.n });
+          });
+        } else if (manche.kind === "designation") {
+          const counts = {};
+          Object.values(manche.designations).forEach(t => { counts[t] = (counts[t] || 0) + 1; });
+          const max = Math.max(0, ...Object.values(counts));
+          const losers = Object.keys(counts).filter(id => counts[id] === max);
+          losers.forEach(id => addGulps(id, manche.dose));
+          Object.entries(manche.designations).forEach(([designerId, targetId]) => {
+            if (losers.includes(targetId) && designerId !== targetId) {
+              summary.push({ kind: "karma", playerId: designerId, n: 1 });
+            }
+          });
+        } else if (manche.kind === "pick") {
+          if (action.target) addGulps(action.target, manche.dose);
+        } else if (manche.kind === "distribute") {
+          Object.entries(action.distribution || {}).forEach(([pid, n]) => {
+            if (n > 0) addGulps(pid, n);
+          });
+        }
+        break;
+      }
+      case "karma": {
+        addGulps(manche.target, manche.dose);
+        summary.push({ kind: "reset_karma", playerId: manche.target });
+        break;
+      }
+      case "alliance": {
+        alliancesToAdd.push({
+          id: uuid(),
+          playerIds: [manche.playerA, manche.playerB],
+          manchesLeft: manche.duration + 1, // +1 cf. rule
+        });
+        break;
+      }
+    }
+
+    // Apply summary, ajout rules/alliances
+    let next = applySummary(session, summary);
+    if (rulesToAdd.length) next = { ...next, active_rules: [...next.active_rules, ...rulesToAdd] };
+    if (alliancesToAdd.length) next = { ...next, alliances: [...next.alliances, ...alliancesToAdd] };
+
+    return { session: next, summary };
+  }
+
+  // ── Welcome ──────────────────────────────────────────────────────────
+  function WelcomeScreen({ hasSession, onNew, onResume, onCustomize }) {
+    return (
+      <div className="damnes-welcome">
+        <div className="damnes-eyebrow">— ★ jeu №3 ★ —</div>
+        <h1 className="damnes-title">La Tournée des Damnés</h1>
+        <div className="damnes-tag">Buvez. Subissez. Recommencez.</div>
+        <div className="damnes-cta-stack">
+          <button className="damnes-cta-primary" onClick={onNew}>
+            <span>NOUVELLE TOURNÉE</span>
+          </button>
+          {hasSession && (
+            <button className="damnes-cta-secondary" onClick={onResume}>
+              REPRENDRE LA TOURNÉE
+            </button>
+          )}
+          <button className="damnes-cta-secondary" onClick={onCustomize}>
+            ⚙ PERSONNALISER LE CONTENU
+          </button>
+          <a className="damnes-back-link" href="index.html">← Retour au Cercle</a>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Custom editor (Phase 4) ──────────────────────────────────────────
+  // Édite les listes custom de Confessions et Règles. Merge avec les
+  // préfaits au moment de la pioche dans App.content.
+  function ListEditor({ title, hint, items, onChange, ioPrefix }) {
+    const [draft, setDraft] = useState("");
+    const fileRef = useRef(null);
+
+    const add = () => {
+      const v = draft.trim();
+      if (!v) return;
+      if (items.includes(v)) { setDraft(""); return; }
+      onChange([...items, v]);
+      setDraft("");
+    };
+    const remove = (i) => onChange(items.filter((_, j) => j !== i));
+
+    const exportJson = () => {
+      const blob = new Blob([JSON.stringify(items, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const stamp = new Date().toISOString().slice(0, 10);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${ioPrefix}-${stamp}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    };
+    const importJson = (file) => {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (!Array.isArray(parsed)) throw new Error("le fichier doit contenir un tableau de strings.");
+          const cleaned = Array.from(new Set(
+            parsed.map(s => typeof s === "string" ? s.trim() : "").filter(Boolean)
+          ));
+          if (cleaned.length === 0) throw new Error("aucune entrée valide.");
+          if (!confirm(`Remplacer la liste actuelle par le fichier importé (${cleaned.length} entrées) ?`)) return;
+          onChange(cleaned);
+        } catch (err) {
+          alert("Import impossible : " + (err.message || "JSON invalide."));
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    return (
+      <div className="damnes-list-editor">
+        <h3 className="damnes-list-title">
+          {title} <span className="damnes-list-count">{items.length}</span>
+        </h3>
+        {hint && <div className="damnes-list-hint">{hint}</div>}
+        <div className="damnes-add-row">
+          <input className="damnes-add-input"
+                 value={draft}
+                 onChange={e => setDraft(e.target.value.slice(0, 200))}
+                 onKeyDown={e => e.key === "Enter" && add()}
+                 placeholder="Ajouter une entrée custom..."
+                 maxLength={200} />
+          <button className="damnes-add-btn" onClick={add} disabled={!draft.trim()}>+</button>
+        </div>
+        <div className="damnes-list-items">
+          {items.length === 0 ? (
+            <div className="damnes-empty">Aucune entrée custom. Le pool reste sur les préfaits.</div>
+          ) : items.map((it, i) => (
+            <div key={i} className="damnes-list-item">
+              <span className="damnes-list-text">{it}</span>
+              <button className="damnes-list-remove" onClick={() => remove(i)} aria-label="Supprimer">×</button>
+            </div>
+          ))}
+        </div>
+        <div className="damnes-list-io">
+          <button className="damnes-io-btn" onClick={exportJson} disabled={items.length === 0}>↓ Exporter JSON</button>
+          <button className="damnes-io-btn" onClick={() => fileRef.current?.click()}>↑ Importer JSON</button>
+          <input ref={fileRef} type="file" accept="application/json,.json"
+                 style={{ display: "none" }}
+                 onChange={(e) => {
+                   const f = e.target.files?.[0];
+                   if (f) importJson(f);
+                   e.target.value = "";
+                 }} />
+        </div>
+      </div>
+    );
+  }
+
+  function CustomScreen({ confessions, rules, setConfessions, setRules, onBack }) {
+    const [tab, setTab] = useState("confessions");
+    return (
+      <div className="damnes-custom">
+        <div className="damnes-custom-head">
+          <h2 className="damnes-custom-title">Personnaliser le contenu</h2>
+          <div className="damnes-custom-sub">
+            Tes ajouts s'empilent sur les préfaits. Suppression = retire seulement le tien.
+          </div>
+        </div>
+        <div className="damnes-custom-tabs">
+          <button className={"damnes-custom-tab" + (tab === "confessions" ? " active" : "")}
+                  onClick={() => setTab("confessions")}>
+            Confessionnal <span className="damnes-list-count">{confessions.length}</span>
+          </button>
+          <button className={"damnes-custom-tab" + (tab === "rules" ? " active" : "")}
+                  onClick={() => setTab("rules")}>
+            Règles <span className="damnes-list-count">{rules.length}</span>
+          </button>
+        </div>
+        {tab === "confessions" && (
+          <ListEditor title="Questions de Confessionnal"
+                      hint="Une question gênante par ligne. Sera tirée au sort comme les préfaites."
+                      items={confessions} onChange={setConfessions}
+                      ioPrefix="damnes-confessions" />
+        )}
+        {tab === "rules" && (
+          <ListEditor title="Règles persistantes"
+                      hint="Une règle par ligne. Active 3 à 6 manches au tirage."
+                      items={rules} onChange={setRules}
+                      ioPrefix="damnes-rules" />
+        )}
+        <div className="damnes-setup-actions">
+          <button className="damnes-back-btn" onClick={onBack}>← Retour</button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Setup ────────────────────────────────────────────────────────────
+  function SetupScreen({ players, onAdd, onRemove, onStart, onBack }) {
+    const [draft, setDraft] = useState("");
+    const [shake, setShake] = useState(false);
+
+    const submit = () => {
+      const v = draft.trim();
+      if (!v) return;
+      const ok = onAdd(v);
+      if (ok) setDraft("");
+      else { setShake(true); setTimeout(() => setShake(false), 250); }
+    };
+
+    const canStart = players.length >= 3 && players.length <= 8;
+
+    return (
+      <div className="damnes-setup">
+        <h2 className="damnes-setup-title">Qui s'autodétruit ce soir ?</h2>
+        <div className="damnes-counter">{players.length} / 8 joueurs</div>
+        <div className="damnes-add-row">
+          <input className={"damnes-add-input" + (shake ? " shake" : "")}
+                 value={draft}
+                 onChange={(e) => setDraft(e.target.value.slice(0, 24))}
+                 onKeyDown={(e) => e.key === "Enter" && submit()}
+                 placeholder="Prénom du damné..."
+                 maxLength={24}
+                 autoFocus />
+          <button className="damnes-add-btn"
+                  onClick={submit}
+                  disabled={!draft.trim() || players.length >= 8}>Ajouter</button>
+        </div>
+        <div className="damnes-players">
+          {players.length === 0 ? (
+            <div className="damnes-empty">Pas de damnés pour l'instant. Ajoutes-en au moins 3.</div>
+          ) : players.map(p => (
+            <div key={p.id} className="damnes-chip">
+              <span>{p.name}</span>
+              <button className="damnes-chip-x" onClick={() => onRemove(p.id)}
+                      aria-label={"Retirer " + p.name}>×</button>
+            </div>
+          ))}
+        </div>
+        {players.length < 3 && (
+          <div className="damnes-warn">Minimum 3 joueurs pour la tournée.</div>
+        )}
+        {players.length >= 8 && (
+          <div className="damnes-warn">Maximum 8 — la table est pleine.</div>
+        )}
+        <div className="damnes-setup-actions">
+          <button className="damnes-back-btn" onClick={onBack}>← Retour</button>
+          <button className="damnes-start-btn" onClick={onStart} disabled={!canStart}>
+            C'EST PARTI
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── HUD ──────────────────────────────────────────────────────────────
+  function Hud({ session, onEnd }) {
+    return (
+      <header className="damnes-hud">
+        <div className="damnes-hud-row">
+          <a className="damnes-hud-back" href="index.html">← Cercle</a>
+          <div className="damnes-hud-meta">Manche {session.manche_count}</div>
+          <button className="damnes-end-btn" onClick={onEnd}>Terminer</button>
+        </div>
+        <div className="damnes-scores">
+          {session.players.map(p => (
+            <div key={p.id} className="damnes-score">
+              <span className="damnes-score-name">{p.name}</span>
+              <span className="damnes-score-gulps">{p.gulps}</span>
+            </div>
+          ))}
+        </div>
+        {(session.active_rules.length > 0 || session.alliances.length > 0) && (
+          <div className="damnes-banners">
+            {session.active_rules.map(r => (
+              <div key={r.id} className="damnes-banner damnes-banner-rule">
+                <span className="damnes-banner-tag">RÈGLE</span>
+                <span className="damnes-banner-text">{r.text}</span>
+                <span className="damnes-banner-left">{r.manchesLeft}</span>
+              </div>
+            ))}
+            {session.alliances.map(a => {
+              const names = a.playerIds.map(id => {
+                const p = session.players.find(pp => pp.id === id);
+                return p ? p.name : "?";
+              }).join(" + ");
+              return (
+                <div key={a.id} className="damnes-banner damnes-banner-alliance">
+                  <span className="damnes-banner-tag">ALLIANCE</span>
+                  <span className="damnes-banner-text">{names} — l'un boit, l'autre boit la moitié</span>
+                  <span className="damnes-banner-left">{a.manchesLeft}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </header>
+    );
+  }
+
+  // ── Playing ──────────────────────────────────────────────────────────
+  function PlayingScreen({ session, onNext, onEnd, onResolve, onUpdate }) {
+    const m = session.current_manche;
+    return (
+      <>
+        <Hud session={session} onEnd={onEnd} />
+        <main className="damnes-stage">
+          {!m && (
+            <div className="damnes-manche-stub">
+              <div className="damnes-manche-label">MANCHE</div>
+              <div className="damnes-manche-num">{session.manche_count}</div>
+              <div className="damnes-manche-text">
+                {session.manche_count === 0
+                  ? <>{session.players.length} damnés au taquet.<br />Que la tournée commence.</>
+                  : <>Manche close. Prêt pour la suite ?</>}
+              </div>
+              <button className="damnes-next-btn" onClick={onNext}>
+                {session.manche_count === 0 ? "PREMIÈRE MANCHE" : "MANCHE SUIVANTE"}
+              </button>
+            </div>
+          )}
+          {m && (
+            <MancheView session={session} manche={m}
+                        onResolve={onResolve}
+                        onUpdate={onUpdate}
+                        onNext={onNext} />
+          )}
+        </main>
+      </>
+    );
+  }
+
+  // ── End ──────────────────────────────────────────────────────────────
+  // Synthétise une narration courte d'une manche pour l'écran de fin.
+  function describeManche(session, m) {
+    if (!m) return "";
+    const nm = (id) => {
+      const p = session.players.find(pp => pp.id === id);
+      return p ? p.name : "?";
+    };
+    switch (m.type) {
+      case "duel":      return `${nm(m.playerA)} vs ${nm(m.playerB)} — ${m.minigame}`;
+      case "vote":      return `${m.question}`;
+      case "sniper":    return `${m.criteria} → ${nm(m.target)}`;
+      case "cascade":   return `Cascade : ${m.sequence.map(s => nm(s.playerId) + " (" + s.dose + ")").join(", ")}`;
+      case "rule":      return `Règle imposée : ${m.text}`;
+      case "confession":return `Confession de ${nm(m.target)} : ${m.question}`;
+      case "roulette":  return `Roulette russe sur ${nm(m.target)} — ${m.result === "culsec" ? "CUL SEC" : "sauvé"}`;
+      case "twist":     return m.text;
+      case "karma":     return `Le Karma frappe ${nm(m.target)}.`;
+      case "alliance":  return `Alliance forcée : ${nm(m.playerA)} + ${nm(m.playerB)}`;
+      default:          return m.type;
+    }
+  }
+
+  function EndScreen({ session, onSave, onNew, saved }) {
+    const sorted = [...session.players].sort((a, b) => b.gulps - a.gulps);
+    const totalGulps = session.players.reduce((s, p) => s + p.gulps, 0);
+    // Manche mémorable : on tire au hasard parmi celles qui ont fait boire ≥ 3 gorgées.
+    const memorable = useMemo(() => {
+      const punchy = session.history.filter(h => {
+        if (!h.summary) return false;
+        const n = h.summary.filter(s => s.kind === "gulp").reduce((s, x) => s + Math.abs(x.n), 0);
+        return n >= 3;
+      });
+      const pool = punchy.length ? punchy : session.history.filter(h => h.summary && h.summary.length);
+      if (pool.length === 0) return null;
+      return pool[Math.floor(Math.random() * pool.length)];
+    }, [session.history.length]);
+
+    return (
+      <div className="damnes-end">
+        <h2 className="damnes-end-title">Fin de la Tournée</h2>
+        <div className="damnes-end-stats">
+          <div>{session.manche_count} manches subies</div>
+          <div>{totalGulps} gorgées distribuées</div>
+          <div>{session.players.length} damnés</div>
+        </div>
+
+        {sorted.length > 0 && (
+          <div className="damnes-podium">
+            <h3>Podium des plus arrosés</h3>
+            {sorted.slice(0, 3).map((p, i) => (
+              <div key={p.id} className={"damnes-podium-row pos-" + (i + 1)}>
+                <span className="damnes-pos">#{i + 1}</span>
+                <span className="damnes-pos-name">{p.name}</span>
+                <span className="damnes-pos-gulps">{p.gulps} gorgées</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {sorted.length > 3 && (
+          <div className="damnes-classement">
+            <h3>Classement complet</h3>
+            <ol className="damnes-classement-list">
+              {sorted.map((p) => (
+                <li key={p.id} className="damnes-classement-row">
+                  <span className="damnes-classement-name">{p.name}</span>
+                  <span className="damnes-classement-bar"
+                        style={{ width: Math.max(4, totalGulps > 0 ? (p.gulps / sorted[0].gulps) * 100 : 0) + "%" }} />
+                  <span className="damnes-classement-gulps">{p.gulps}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {memorable && (
+          <div className="damnes-memorable">
+            <h3>Manche mémorable</h3>
+            <div className="damnes-memorable-tag">{memorable.type.toUpperCase()}</div>
+            <div className="damnes-memorable-text">{describeManche(session, memorable)}</div>
+          </div>
+        )}
+
+        <div className="damnes-end-actions">
+          <button className="damnes-end-save" onClick={onSave} disabled={saved}>
+            {saved ? "✓ Sauvegardé" : "Sauvegarder dans le Hall"}
+          </button>
+          <button className="damnes-end-new" onClick={onNew}>Nouvelle tournée</button>
+          <a className="damnes-end-hub" href="index.html">Retour au Cercle</a>
+        </div>
+      </div>
+    );
+  }
+
+
+
+
+  // ═══ Manche views ═══════════════════════════════════════════════════
+  // Chaque vue gère ses interactions internes puis appelle onResolve(action)
+  // pour déclencher les effets. Une fois résolue, on affiche un résumé +
+  // bouton MANCHE SUIVANTE qui appelle onNext.
+
+  function ManchePostResolve({ session, manche, onNext }) {
+    const ps = (id) => {
+      const p = session.players.find(pp => pp.id === id);
+      return p ? p.name : "?";
+    };
+    const summary = manche.summary || [];
+    const gulpEffects = summary.filter(s => s.kind === "gulp" && s.n !== 0);
+    return (
+      <div className="damnes-resolved">
+        <div className="damnes-manche-result-label">RÉSULTAT</div>
+        {gulpEffects.length === 0 ? (
+          <div className="damnes-result-text">Personne ne boit. Pour cette fois.</div>
+        ) : (
+          <ul className="damnes-result-list">
+            {gulpEffects.map((s, i) => (
+              <li key={i} className={s.n < 0 ? "damnes-result-row neg" : "damnes-result-row"}>
+                <span className="damnes-result-name">{ps(s.playerId)}</span>
+                <span className="damnes-result-arrow">→</span>
+                <span className="damnes-result-gulps">
+                  {s.n === 99 ? "CUL SEC" : (s.n > 0 ? "+" + s.n : s.n) + " gorgée" + (Math.abs(s.n) > 1 ? "s" : "")}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <button className="damnes-next-btn" onClick={onNext}>MANCHE SUIVANTE</button>
+      </div>
+    );
+  }
+
+  function MancheView({ session, manche, onResolve, onUpdate, onNext }) {
+    if (manche.resolved) {
+      return <ManchePostResolve session={session} manche={manche} onNext={onNext} />;
+    }
+    const Comp = {
+      duel: MancheDuel,
+      vote: MancheVote,
+      sniper: MancheSniper,
+      cascade: MancheCascade,
+      rule: MancheRule,
+      confession: MancheConfession,
+      roulette: MancheRoulette,
+      twist: MancheTwist,
+      karma: MancheKarma,
+      alliance: MancheAlliance,
+    }[manche.type];
+    if (!Comp) return null;
+    return (
+      <div className={"damnes-manche damnes-manche-" + manche.type}>
+        <div className="damnes-manche-tag">{manche.type.toUpperCase()}</div>
+        <Comp session={session} manche={manche}
+              onResolve={onResolve} onUpdate={onUpdate} />
+      </div>
+    );
+  }
+
+  function nameOf(session, id) {
+    const p = session.players.find(pp => pp.id === id);
+    return p ? p.name : "?";
+  }
+
+  function MancheDuel({ session, manche, onResolve }) {
+    const a = session.players.find(p => p.id === manche.playerA);
+    const b = session.players.find(p => p.id === manche.playerB);
+    return (
+      <>
+        <div className="damnes-manche-title">
+          <b>{a.name}</b> <span className="vs">vs</span> <b>{b.name}</b>
+        </div>
+        <div className="damnes-manche-body">{manche.minigame}</div>
+        <div className="damnes-manche-sub">Le perdant boit <b>{manche.dose}</b> gorgées.</div>
+        <div className="damnes-action-row">
+          <button className="damnes-pick-btn" onClick={() => onResolve({ winner: a.id })}>
+            {a.name} GAGNE
+          </button>
+          <button className="damnes-pick-btn" onClick={() => onResolve({ winner: b.id })}>
+            {b.name} GAGNE
+          </button>
+        </div>
+      </>
+    );
+  }
+
+  function MancheVote({ session, manche, onResolve, onUpdate }) {
+    const voter = session.players[manche.voterIdx];
+    const vote = (votedId) => {
+      const newChoices = { ...manche.voterChoices, [voter.id]: votedId };
+      const nextIdx = manche.voterIdx + 1;
+      if (nextIdx >= session.players.length) {
+        onResolve({ voterChoices: newChoices });
+      } else {
+        onUpdate({ voterChoices: newChoices, voterIdx: nextIdx });
+      }
+    };
+    return (
+      <>
+        <div className="damnes-manche-title">{manche.question}</div>
+        <div className="damnes-manche-sub">
+          Le plus voté boit <b>{manche.dose}</b>. <br />
+          <span className="damnes-voter">À <b>{voter.name}</b> de voter</span>
+          <span className="damnes-voter-progress"> ({manche.voterIdx + 1} / {session.players.length})</span>
+        </div>
+        <div className="damnes-action-grid">
+          {session.players.map(p => (
+            <button key={p.id} className="damnes-pick-btn" onClick={() => vote(p.id)}>
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  function MancheSniper({ session, manche, onResolve }) {
+    const target = session.players.find(p => p.id === manche.target);
+    return (
+      <>
+        <div className="damnes-manche-title">{manche.criteria}</div>
+        <div className="damnes-manche-body">
+          <span className="damnes-target">{target.name}</span>
+        </div>
+        <div className="damnes-manche-sub">Boit <b>{manche.dose}</b> gorgées.</div>
+        <button className="damnes-next-btn" onClick={() => onResolve({})}>VALIDER</button>
+      </>
+    );
+  }
+
+  function MancheCascade({ session, manche, onResolve }) {
+    return (
+      <>
+        <div className="damnes-manche-title">La cascade s'abat.</div>
+        <ul className="damnes-cascade-list">
+          {manche.sequence.map((s, i) => (
+            <li key={i}>
+              <b>{nameOf(session, s.playerId)}</b> boit <span className="damnes-dose">{s.dose}</span>
+            </li>
+          ))}
+        </ul>
+        <button className="damnes-next-btn" onClick={() => onResolve({})}>VALIDER</button>
+      </>
+    );
+  }
+
+  function MancheRule({ session, manche, onResolve }) {
+    return (
+      <>
+        <div className="damnes-manche-title">Nouvelle règle pour {manche.duration} manches.</div>
+        <div className="damnes-rule-text">{manche.text}</div>
+        <button className="damnes-next-btn" onClick={() => onResolve({})}>JE JURE DE M'Y PLIER</button>
+      </>
+    );
+  }
+
+  function MancheConfession({ session, manche, onResolve }) {
+    const target = session.players.find(p => p.id === manche.target);
+    return (
+      <>
+        <div className="damnes-manche-title">
+          <b>{target.name}</b>, à toi.
+        </div>
+        <div className="damnes-confession-q">{manche.question}</div>
+        <div className="damnes-manche-sub">Réponds honnêtement OU bois <b>{manche.dose}</b> gorgées.</div>
+        <div className="damnes-action-row">
+          <button className="damnes-pick-btn" onClick={() => onResolve({ choice: "answered" })}>
+            J'AI RÉPONDU
+          </button>
+          <button className="damnes-pick-btn alt" onClick={() => onResolve({ choice: "drank" })}>
+            JE BOIS {manche.dose}
+          </button>
+        </div>
+      </>
+    );
+  }
+
+  function MancheRoulette({ session, manche, onResolve }) {
+    const target = session.players.find(p => p.id === manche.target);
+    const [phase, setPhase] = useState("ready"); // ready | spinning | done
+    const [activeIdx, setActiveIdx] = useState(0);
+    const cells = ["VIDE", "VIDE", "VIDE", "VIDE", "VIDE", "CUL SEC"];
+    const labels = cells.map((_, i) => i === manche.culsecIdx ? "CUL SEC" : "VIDE");
+
+    useEffect(() => {
+      if (phase !== "spinning") return;
+      let i = 0;
+      const total = 24 + manche.culsecIdx; // tours total avant arrêt
+      const step = () => {
+        setActiveIdx(i % 6);
+        i++;
+        if (i > total) {
+          setActiveIdx(manche.culsecIdx);
+          setPhase("done");
+          const result = labels[manche.culsecIdx] === "CUL SEC" ? "culsec" : "safe";
+          setTimeout(() => onResolve({ result }), 800);
+          return;
+        }
+        const delay = 60 + Math.pow(i / total, 2) * 240;
+        setTimeout(step, delay);
+      };
+      step();
+    }, [phase]);
+
+    return (
+      <>
+        <div className="damnes-manche-title">
+          <b>{target.name}</b>, ton heure a peut-être sonné.
+        </div>
+        <div className="damnes-roulette-grid">
+          {cells.map((_, i) => (
+            <div key={i} className={
+              "damnes-roulette-cell"
+              + (activeIdx === i && phase !== "ready" ? " active" : "")
+              + (phase === "done" && i === manche.culsecIdx && labels[i] === "CUL SEC" ? " culsec" : "")
+            }>
+              {phase === "done" && i === activeIdx ? labels[i] : "?"}
+            </div>
+          ))}
+        </div>
+        {phase === "ready" && (
+          <button className="damnes-next-btn" onClick={() => setPhase("spinning")}>
+            TIRER
+          </button>
+        )}
+        {phase === "spinning" && <div className="damnes-manche-sub">Le destin s'agite...</div>}
+        {phase === "done" && (
+          <div className="damnes-manche-sub">
+            {labels[manche.culsecIdx] === "CUL SEC"
+              ? <><b>CUL SEC</b> pour {target.name}.</>
+              : <>Sauvé. Pour cette fois.</>}
+          </div>
+        )}
+      </>
+    );
+  }
+
+  function MancheTwist({ session, manche, onResolve, onUpdate }) {
+    if (manche.kind === "auto") {
+      return (
+        <>
+          <div className="damnes-twist-text">{manche.text}</div>
+          <button className="damnes-next-btn" onClick={() => onResolve({})}>SUBIR LE TWIST</button>
+        </>
+      );
+    }
+    if (manche.kind === "designation") {
+      const designer = session.players[manche.designerIdx];
+      const designate = (targetId) => {
+        const designations = { ...manche.designations, [designer.id]: targetId };
+        const nextIdx = manche.designerIdx + 1;
+        if (nextIdx >= session.players.length) onResolve({ designations });
+        else onUpdate({ designations, designerIdx: nextIdx });
+      };
+      return (
+        <>
+          <div className="damnes-twist-text">{manche.text}</div>
+          <div className="damnes-manche-sub">
+            <b>{designer.name}</b> désigne ({manche.designerIdx + 1} / {session.players.length})
+          </div>
+          <div className="damnes-action-grid">
+            {session.players.map(p => (
+              <button key={p.id} className="damnes-pick-btn" onClick={() => designate(p.id)}>
+                {p.name}
+              </button>
+            ))}
+          </div>
+        </>
+      );
+    }
+    if (manche.kind === "pick") {
+      const picker = session.players.find(p => p.id === manche.pickerId);
+      return (
+        <>
+          <div className="damnes-twist-text">{manche.text}</div>
+          <div className="damnes-manche-sub">
+            <b>{picker.name}</b> choisit qui boit <b>{manche.dose}</b>.
+          </div>
+          <div className="damnes-action-grid">
+            {session.players.filter(p => p.id !== picker.id).map(p => (
+              <button key={p.id} className="damnes-pick-btn" onClick={() => onResolve({ target: p.id })}>
+                {p.name}
+              </button>
+            ))}
+          </div>
+        </>
+      );
+    }
+    if (manche.kind === "distribute") {
+      const picker = session.players.find(p => p.id === manche.pickerId);
+      const distrib = manche.distribution || {};
+      const placed = Object.values(distrib).reduce((s, n) => s + n, 0);
+      const remaining = manche.total - placed;
+      const adjust = (id, delta) => {
+        const cur = distrib[id] || 0;
+        const next = Math.max(0, cur + delta);
+        const newTotal = placed - cur + next;
+        if (newTotal > manche.total) return;
+        onUpdate({ distribution: { ...distrib, [id]: next } });
+      };
+      return (
+        <>
+          <div className="damnes-twist-text">{manche.text}</div>
+          <div className="damnes-manche-sub">
+            <b>{picker.name}</b> distribue {manche.total} gorgées. Reste : <b>{remaining}</b>.
+          </div>
+          <div className="damnes-distribute-list">
+            {session.players.map(p => (
+              <div key={p.id} className="damnes-distribute-row">
+                <span className="damnes-distribute-name">{p.name}</span>
+                <div className="damnes-distribute-controls">
+                  <button onClick={() => adjust(p.id, -1)} disabled={(distrib[p.id] || 0) <= 0}>−</button>
+                  <span className="damnes-distribute-n">{distrib[p.id] || 0}</span>
+                  <button onClick={() => adjust(p.id, 1)} disabled={remaining <= 0}>+</button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button className="damnes-next-btn"
+                  onClick={() => onResolve({ distribution: distrib })}
+                  disabled={remaining > 0}>
+            VALIDER
+          </button>
+        </>
+      );
+    }
+    return null;
+  }
+
+  function MancheKarma({ session, manche, onResolve }) {
+    const target = session.players.find(p => p.id === manche.target);
+    return (
+      <>
+        <div className="damnes-manche-title">Le Karma frappe.</div>
+        <div className="damnes-manche-body">
+          <b>{target.name}</b> a trop fait subir aux autres.
+        </div>
+        <div className="damnes-manche-sub">Boit <b>{manche.dose}</b> gorgées. Karma reset.</div>
+        <button className="damnes-next-btn" onClick={() => onResolve({})}>SUBIR LE KARMA</button>
+      </>
+    );
+  }
+
+  function MancheAlliance({ session, manche, onResolve }) {
+    const a = session.players.find(p => p.id === manche.playerA);
+    const b = session.players.find(p => p.id === manche.playerB);
+    return (
+      <>
+        <div className="damnes-manche-title">ALLIANCE FORCÉE</div>
+        <div className="damnes-manche-body">
+          <b>{a.name}</b> + <b>{b.name}</b>
+        </div>
+        <div className="damnes-manche-sub">
+          Pour les <b>{manche.duration}</b> prochaines manches : si l'un boit, l'autre boit la moitié (arrondi sup).
+        </div>
+        <button className="damnes-next-btn" onClick={() => onResolve({})}>SCELLER L'ALLIANCE</button>
+      </>
+    );
+  }
+
+
+  // ── App ──────────────────────────────────────────────────────────────
+  function App() {
+    const initial = storage.get(SESSION_KEY, null);
+    const initialHasOngoing = !!(initial && Array.isArray(initial.players) && initial.players.length >= 3);
+
+    const [session, setSessionState] = useState(initial || emptySession());
+    const setSession = useCallback((updater) => {
+      setSessionState(prev => {
+        const next = typeof updater === "function" ? updater(prev) : updater;
+        storage.set(SESSION_KEY, next);
+        return next;
+      });
+    }, []);
+
+    const [phase, setPhase] = useState(initialHasOngoing ? PHASE_PLAYING : PHASE_WELCOME);
+    const [endSaved, setEndSaved] = useState(false);
+
+    // hasSession est dérivé en live au cas où on vide la session
+    const hasSession = session.players.length >= 3;
+
+    const newTournee = () => {
+      setSession(emptySession());
+      setEndSaved(false);
+      setPhase(PHASE_SETUP);
+    };
+    const resumeTournee = () => {
+      if (hasSession) setPhase(PHASE_PLAYING);
+    };
+    const backToWelcome = () => setPhase(PHASE_WELCOME);
+    const goCustomize = () => setPhase(PHASE_CUSTOM);
+
+    const addPlayer = (name) => {
+      const trimmed = name.trim();
+      if (!trimmed) return false;
+      if (session.players.length >= 8) return false;
+      if (session.players.some(p => p.name.toLowerCase() === trimmed.toLowerCase())) return false;
+      setSession(s => ({
+        ...s,
+        players: [...s.players, { id: uuid(), name: trimmed, gulps: 0, karma: 0 }],
+      }));
+      return true;
+    };
+    const removePlayer = (id) => {
+      setSession(s => ({ ...s, players: s.players.filter(p => p.id !== id) }));
+    };
+
+    const startTournee = () => {
+      if (session.players.length < 3 || session.players.length > 8) return;
+      setSession(s => ({ ...s, manche_count: 0, history: [], active_rules: [], alliances: [] }));
+      setEndSaved(false);
+      setPhase(PHASE_PLAYING);
+    };
+
+    // Custom content (Phase 4) — listes user-supplied mergées aux préfaits.
+    const [customConfessions, setCustomConfessionsState] = useState(() => storage.get(CUSTOM_CONFESSIONS_KEY, []));
+    const setCustomConfessions = useCallback((arr) => {
+      setCustomConfessionsState(arr);
+      storage.set(CUSTOM_CONFESSIONS_KEY, arr);
+    }, []);
+    const [customRules, setCustomRulesState] = useState(() => storage.get(CUSTOM_RULES_KEY, []));
+    const setCustomRules = useCallback((arr) => {
+      setCustomRulesState(arr);
+      storage.set(CUSTOM_RULES_KEY, arr);
+    }, []);
+
+    // Contenu mergé : préfaits + custom (même poids dans la pioche par
+    // simple concat — la pioche pickRandom est uniforme sur le pool).
+    const content = useMemo(() => ({
+      votes: QUESTIONS_VOTE,
+      confessions: [...QUESTIONS_CONFESSION, ...customConfessions],
+      rules: [...RULES_PERSISTANT, ...customRules],
+    }), [customConfessions, customRules]);
+
+    // Tire la prochaine manche : log la précédente, tick timers, pioche, build.
+    const nextManche = () => {
+      let pickedType = null;
+      setSession(s => {
+        let next = { ...s };
+        // Log la manche précédente si elle est résolue
+        if (s.current_manche && s.current_manche.resolved) {
+          next.history = [...s.history, s.current_manche];
+        }
+        next.manche_count = s.manche_count + 1;
+        next = tickTimers(next);
+        const type = pickMancheType(next);
+        pickedType = type;
+        const m = buildManche(type, next, content);
+        next.current_manche = { ...m, resolved: false };
+        return next;
+      });
+      // Son d'entrée variable selon le type (cf. brief)
+      try { window.audio.playClick(0.1); } catch (e) {}
+      setTimeout(() => {
+        try {
+          switch (pickedType) {
+            case "duel":       window.audio.playMancheStart(0.16); break;
+            case "vote":       window.audio.playClick(0.18); break;
+            case "sniper":     window.audio.playDing(0.16); break;
+            case "cascade":    window.audio.playMancheStart(0.18); break;
+            case "rule":       window.audio.playLock(0.14); break;
+            case "confession": window.audio.playStamp(0.16); break;
+            case "roulette":   window.audio.playDrumroll(2.0, 0.14); break;
+            case "twist":      window.audio.playTwist(0.18); break;
+            case "karma":      window.audio.playKarmaStrike(0.18); break;
+            case "alliance":   window.audio.playLock(0.16); break;
+            default:           window.audio.playMancheStart(0.16);
+          }
+        } catch (e) {}
+      }, 60);
+    };
+
+    // MAJ de la manche en cours (vote in progress, désignation, etc.)
+    // L'UI capture étape par étape et appelle updateManche pour stocker.
+    const updateManche = (patch) => {
+      setSession(s => ({
+        ...s,
+        current_manche: s.current_manche ? { ...s.current_manche, ...patch } : null,
+      }));
+    };
+
+    // Résolution finale d'une manche : applique effets + summary.
+    const resolveManche = (action) => {
+      setSession(s => {
+        if (!s.current_manche || s.current_manche.resolved) return s;
+        const { session: ns, summary } = resolveMancheLogic(s, s.current_manche, action || {});
+        return {
+          ...ns,
+          current_manche: { ...s.current_manche, ...action, resolved: true, summary },
+        };
+      });
+      // sons selon le type
+      const t = session.current_manche && session.current_manche.type;
+      try {
+        if (t === "karma") window.audio.playKarmaStrike();
+        else if (t === "twist") window.audio.playTwist();
+        else if (t === "roulette" && action && action.result === "culsec") window.audio.playCulSec();
+        else window.audio.playStamp(0.18);
+      } catch (e) {}
+    };
+
+    const endTournee = () => {
+      setEndSaved(false);
+      setPhase(PHASE_END);
+    };
+
+    const saveToHall = () => {
+      const sorted = [...session.players].sort((a, b) => b.gulps - a.gulps);
+      hall.add({
+        game: "damnes",
+        players: sorted.map(p => ({ name: p.name, gulps: p.gulps })),
+        manche_count: session.manche_count,
+        winner: sorted[0] ? sorted[0].name : "Anonyme",
+        loser: sorted[sorted.length - 1] ? sorted[sorted.length - 1].name : "Anonyme",
+      });
+      setEndSaved(true);
+    };
+
+    const newAfterEnd = () => {
+      storage.remove(SESSION_KEY);
+      setSessionState(emptySession());
+      setEndSaved(false);
+      setPhase(PHASE_SETUP);
+    };
+
+    return (
+      <div className="damnes">
+        <DustParticles />
+        {phase === PHASE_WELCOME && (
+          <WelcomeScreen hasSession={hasSession}
+                         onNew={newTournee}
+                         onResume={resumeTournee}
+                         onCustomize={goCustomize} />
+        )}
+        {phase === PHASE_CUSTOM && (
+          <CustomScreen confessions={customConfessions}
+                        rules={customRules}
+                        setConfessions={setCustomConfessions}
+                        setRules={setCustomRules}
+                        onBack={backToWelcome} />
+        )}
+        {phase === PHASE_SETUP && (
+          <SetupScreen players={session.players}
+                       onAdd={addPlayer}
+                       onRemove={removePlayer}
+                       onStart={startTournee}
+                       onBack={backToWelcome} />
+        )}
+        {phase === PHASE_PLAYING && (
+          <PlayingScreen session={session}
+                         onNext={nextManche}
+                         onEnd={endTournee}
+                         onResolve={resolveManche}
+                         onUpdate={updateManche} />
+        )}
+        {phase === PHASE_END && (
+          <EndScreen session={session}
+                     onSave={saveToHall}
+                     onNew={newAfterEnd}
+                     saved={endSaved} />
+        )}
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
