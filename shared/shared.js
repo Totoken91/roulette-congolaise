@@ -204,6 +204,103 @@ window.audio = (function () {
     } catch (e) {}
   }
 
+  // Sons Damnés
+  function playMancheStart(volume = 0.16) {
+    if (!enabled) return;
+    try {
+      const c = ac(); const t = c.currentTime;
+      // Accord court montant : tierce + quinte
+      [392, 494, 587].forEach((freq, i) => {
+        const o = c.createOscillator(); const g = c.createGain();
+        o.type = "triangle";
+        o.frequency.setValueAtTime(freq, t + i * 0.04);
+        g.gain.setValueAtTime(0, t + i * 0.04);
+        g.gain.linearRampToValueAtTime(volume * 0.7, t + i * 0.04 + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t + i * 0.04 + 0.25);
+        o.connect(g).connect(c.destination);
+        o.start(t + i * 0.04); o.stop(t + i * 0.04 + 0.28);
+      });
+    } catch (e) {}
+  }
+
+  function playKarmaStrike(volume = 0.22) {
+    if (!enabled) return;
+    try {
+      const c = ac(); const t = c.currentTime;
+      // frappe sourde : sine très basse + cloche grave longue
+      const o1 = c.createOscillator(); const g1 = c.createGain();
+      o1.type = "sine";
+      o1.frequency.setValueAtTime(60, t);
+      o1.frequency.exponentialRampToValueAtTime(40, t + 0.4);
+      g1.gain.setValueAtTime(volume * 1.4, t);
+      g1.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      o1.connect(g1).connect(c.destination);
+      o1.start(t); o1.stop(t + 0.55);
+
+      const o2 = c.createOscillator(); const g2 = c.createGain();
+      o2.type = "triangle";
+      o2.frequency.setValueAtTime(146.83, t + 0.04); // ré2 grave
+      g2.gain.setValueAtTime(0, t + 0.04);
+      g2.gain.linearRampToValueAtTime(volume, t + 0.06);
+      g2.gain.exponentialRampToValueAtTime(0.001, t + 1.3);
+      o2.connect(g2).connect(c.destination);
+      o2.start(t + 0.04); o2.stop(t + 1.4);
+    } catch (e) {}
+  }
+
+  function playTwist(volume = 0.18) {
+    if (!enabled) return;
+    try {
+      const c = ac(); const t = c.currentTime;
+      // sweep descendant + effet "scratch" via oscillator type changing
+      const o = c.createOscillator(); const g = c.createGain();
+      o.type = "sawtooth";
+      o.frequency.setValueAtTime(800, t);
+      o.frequency.exponentialRampToValueAtTime(120, t + 0.45);
+      g.gain.setValueAtTime(volume, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      const flt = c.createBiquadFilter();
+      flt.type = "bandpass"; flt.frequency.value = 600; flt.Q.value = 4;
+      o.connect(flt).connect(g).connect(c.destination);
+      o.start(t); o.stop(t + 0.55);
+    } catch (e) {}
+  }
+
+  function playCulSec(volume = 0.22) {
+    if (!enabled) return;
+    try {
+      const c = ac(); const start = c.currentTime;
+      // fanfare descendante désespérée : 5 notes en chute
+      const notes = [880, 740, 622, 494, 415, 349, 293];
+      notes.forEach((freq, i) => {
+        const t = start + i * 0.13;
+        const o = c.createOscillator(); const g = c.createGain();
+        o.type = "sawtooth";
+        o.frequency.setValueAtTime(freq, t);
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(volume, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+        o.connect(g).connect(c.destination);
+        o.start(t); o.stop(t + 0.2);
+      });
+      // boom final
+      setTimeout(() => {
+        if (!enabled) return;
+        try {
+          const c2 = ac(); const t2 = c2.currentTime;
+          const o = c2.createOscillator(); const g = c2.createGain();
+          o.type = "triangle";
+          o.frequency.setValueAtTime(80, t2);
+          o.frequency.exponentialRampToValueAtTime(50, t2 + 0.6);
+          g.gain.setValueAtTime(volume * 1.4, t2);
+          g.gain.exponentialRampToValueAtTime(0.001, t2 + 0.8);
+          o.connect(g).connect(c2.destination);
+          o.start(t2); o.stop(t2 + 0.85);
+        } catch (e) {}
+      }, notes.length * 130);
+    } catch (e) {}
+  }
+
   function playDefeat(volume = 0.18) {
     if (!enabled) return;
     try {
@@ -242,6 +339,7 @@ window.audio = (function () {
     isEnabled() { return enabled; },
     playClick, playDrumroll, playDing, playDefeat,
     playFlip, playStamp, playLock,
+    playMancheStart, playKarmaStrike, playTwist, playCulSec,
   };
 })();
 
