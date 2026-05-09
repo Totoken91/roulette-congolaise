@@ -1313,7 +1313,7 @@
     "Interdit de prononcer le mot \"truc\" — infraction = cul sec.",
     "Tout le monde parle en chuchotant — infraction = 2 gorgées.",
     "Interdit de pointer du doigt — 1 gorgée par infraction.",
-    "Obligation de finir chaque phrase par \"mon poulet\".",
+    "Tout le monde appelle un autre joueur \"Maman\" ou \"Papa\" (libre choix) — 2 gorgées si on lâche.",
     "Interdit de dire \"je\" — utiliser \"votre serviteur\" — 2 gorgées sinon.",
     "Personne ne peut dire le prénom des autres — 2 gorgées par infraction.",
     "Quand quelqu'un boit, il faut dire \"à la santé du Damné\" — sinon 1 gorgée.",
@@ -1329,18 +1329,18 @@
     "Le plus vieux est désigné \"Sage\" — sa parole est loi, 3 gorgées si désobéi.",
     "Interdit de dire \"oui\" ou \"non\" — 2 gorgées d'infraction.",
     "Interdit de poser le verre sur la table — 1 gorgée par infraction.",
-    "Tout le monde commence ses phrases par \"À mon humble avis\" — 1 gorgée sinon.",
+    "Tout le monde commence ses phrases par \"En tant que personne diplômée\" — 1 gorgée sinon.",
   ];
 
   const MINIGAMES_DUEL = [
-    "Pierre-feuille-ciseaux mental : chacun pense à un truc, on compare.",
+    "Pierre-feuille-ciseaux, 3 manches sèches. Le perdant boit.",
     "Bras de fer regard — premier qui cligne perd.",
-    "Le plus rapide à dire \"Les chaussettes de l'archiduchesse sont-elles sèches ?\".",
-    "Le plus rapide à citer 5 marques de chips.",
-    "Compter à rebours de 30 à 1 par 3 le plus vite.",
-    "Concours de grimace — qui fait pleurer l'autre de rire en premier.",
+    "Le plus rapide à dire \"Les chaussettes de l'archiduchesse sont-elles sèches ?\" sans se planter.",
+    "Le plus rapide à citer 5 personnalités françaises ayant fini en taule.",
+    "Compter à rebours de 100 à 0 par 7 le plus vite. La culture s'écroule.",
+    "Jeu de la barbichette : \"Je te tiens, tu me tiens, par la barbichette, le premier de nous deux qui rira aura une tapette.\" Premier qui rit perd.",
     "Imitation du dernier ex/crush — meilleure imitation gagne (vote des autres).",
-    "Le plus convaincant en mentant sur sa profession — vote des autres.",
+    "Le plus convaincant en mentant sur sa profession 30 secondes — vote des autres.",
   ];
 
   // Critères Sniper : pick(players) renvoie le playerId qui matche, ou null.
@@ -1556,7 +1556,7 @@
     { type: "duel",       weight: 15 },
     { type: "vote",       weight: 15 },
     { type: "sniper",     weight: 12 },
-    { type: "cascade",    weight: 10 },
+    { type: "cascade",    weight: 5  },
     { type: "rule",       weight: 10 },
     { type: "confession", weight: 10 },
     { type: "roulette",   weight: 8  },
@@ -1569,7 +1569,7 @@
     let types = MANCHE_TYPES.filter(t => !t.requires || t.requires(session));
     // Échauffement : 3 premières manches → biais types simples
     if (session.manche_count <= 3) {
-      const easy = types.filter(t => ["duel", "sniper", "cascade"].includes(t.type));
+      const easy = types.filter(t => ["duel", "sniper", "vote"].includes(t.type));
       if (easy.length > 0) types = easy;
     }
     // Évite répéter le type juste précédent si possible
