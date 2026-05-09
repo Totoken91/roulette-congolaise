@@ -820,15 +820,61 @@
     text-align: right;
   }
 
-  /* Accents par type (subtil pour Phase 2) */
-  .damnes-manche-karma { border-color: var(--blood); }
-  .damnes-manche-karma .damnes-manche-tag { color: var(--blood); }
-  .damnes-manche-roulette { border-color: var(--neon-rose); }
-  .damnes-manche-twist { border-color: var(--damned-purple); }
-  .damnes-manche-twist .damnes-manche-tag { color: var(--damned-purple); filter: brightness(1.6); }
-  .damnes-manche-confession { border-color: var(--gold); }
-  .damnes-manche-rule .damnes-manche-tag { color: var(--neon-rose); }
-  .damnes-manche-alliance .damnes-manche-tag { color: var(--gold); }
+  /* Accents par type (Phase 3 — plus marqués) */
+  .damnes-manche-duel       { border-color: var(--gold-deep);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 32px rgba(212, 175, 55, 0.15); }
+  .damnes-manche-duel .damnes-manche-tag       { color: var(--gold); }
+
+  .damnes-manche-vote       { border-color: var(--neon-rose);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 32px rgba(255, 107, 138, 0.18); }
+  .damnes-manche-vote .damnes-manche-tag       { color: var(--neon-rose); }
+
+  .damnes-manche-sniper     { border-color: var(--gold-pale);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 36px rgba(240, 201, 135, 0.22); }
+  .damnes-manche-sniper .damnes-manche-tag     { color: var(--gold-pale); }
+
+  .damnes-manche-cascade    { border-color: var(--copper);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 36px rgba(193, 75, 75, 0.22); }
+  .damnes-manche-cascade .damnes-manche-tag    { color: var(--copper); filter: brightness(1.3); }
+
+  .damnes-manche-rule       { border-color: var(--neon-rose);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 107, 138, 0.25); }
+  .damnes-manche-rule .damnes-manche-tag       { color: var(--neon-rose); }
+
+  .damnes-manche-confession { border-color: var(--gold);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 40px rgba(212, 175, 55, 0.3); }
+  .damnes-manche-confession .damnes-manche-tag { color: var(--gold); }
+
+  .damnes-manche-roulette   { border-color: var(--neon-red);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(255, 43, 74, 0.35);
+    animation: damnes-manche-in 0.35s ease-out, damnes-roulette-tension 2.5s ease-in-out infinite; }
+  .damnes-manche-roulette .damnes-manche-tag   { color: var(--neon-rose); letter-spacing: 0.5em; }
+  @keyframes damnes-roulette-tension {
+    0%, 100% { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(255, 43, 74, 0.35); }
+    50%      { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 60px rgba(255, 43, 74, 0.55); }
+  }
+
+  .damnes-manche-twist      { border-color: var(--damned-purple);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(61, 30, 92, 0.55); }
+  .damnes-manche-twist .damnes-manche-tag      { color: var(--damned-purple); filter: brightness(1.8); }
+
+  .damnes-manche-karma      { border-color: var(--blood);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(139, 10, 20, 0.5);
+    animation: damnes-manche-in 0.35s ease-out, damnes-karma-pulse 2.2s ease-in-out infinite; }
+  .damnes-manche-karma .damnes-manche-tag      { color: var(--blood); filter: brightness(1.5); }
+  @keyframes damnes-karma-pulse {
+    0%, 100% { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 44px rgba(139, 10, 20, 0.5); }
+    50%      { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 64px rgba(139, 10, 20, 0.75); }
+  }
+
+  .damnes-manche-alliance   { border-color: var(--gold);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 40px rgba(212, 175, 55, 0.3); }
+  .damnes-manche-alliance .damnes-manche-tag   { color: var(--gold); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .damnes-manche-roulette,
+    .damnes-manche-karma { animation: none; }
+  }
 
   /* ── End ─────────────────────────────────────────────────────────── */
   .damnes-end {
@@ -914,6 +960,78 @@
     font-size: 13px;
     color: var(--neon-rose);
   }
+
+  .damnes-classement {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .damnes-classement h3 {
+    margin: 0 0 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-align: center;
+    font-size: 13px;
+  }
+  .damnes-classement-list { list-style: none; padding: 0; margin: 0; }
+  .damnes-classement-row {
+    display: grid;
+    grid-template-columns: minmax(80px, 22%) 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--ivory);
+  }
+  .damnes-classement-name { font-size: 14px; }
+  .damnes-classement-bar {
+    height: 8px;
+    background: linear-gradient(90deg, var(--copper), var(--neon-rose));
+    border-radius: 999px;
+    box-shadow: 0 0 10px rgba(255, 107, 138, 0.3);
+    transition: width 0.3s;
+  }
+  .damnes-classement-gulps {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .damnes-memorable {
+    width: 100%;
+    background: rgba(61, 30, 92, 0.2);
+    border: 1px solid var(--damned-purple);
+    border-radius: 8px;
+    padding: 18px 20px;
+    text-align: center;
+  }
+  .damnes-memorable h3 {
+    margin: 0 0 8px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    font-size: 13px;
+  }
+  .damnes-memorable-tag {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.4em;
+    font-size: 11px;
+    color: var(--neon-rose);
+    margin-bottom: 6px;
+  }
+  .damnes-memorable-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ivory);
+    line-height: 1.4;
+  }
   .damnes-end-actions {
     display: flex;
     gap: 12px;
@@ -953,6 +1071,144 @@
   }
   .damnes-end-hub:hover { background: rgba(212, 175, 55, 0.1); }
 
+  /* ── Custom editor (Phase 4) ──────────────────────────────────────── */
+  .damnes-custom {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 24px;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 16px;
+  }
+  .damnes-custom-head { text-align: center; width: 100%; }
+  .damnes-custom-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 40px);
+    color: var(--gold-pale);
+    margin: 0 0 6px;
+  }
+  .damnes-custom-sub {
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.6);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  .damnes-custom-tabs {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    margin-top: 6px;
+  }
+  .damnes-custom-tab {
+    flex: 1;
+    appearance: none;
+    background: rgba(245, 233, 208, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    color: rgba(245, 233, 208, 0.7);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .damnes-custom-tab:hover { color: var(--gold-pale); }
+  .damnes-custom-tab.active {
+    background: linear-gradient(180deg, var(--copper), var(--damned-purple));
+    border-color: var(--gold);
+    color: var(--ivory);
+  }
+  .damnes-list-count {
+    display: inline-block;
+    margin-left: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--gold);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+
+  .damnes-list-editor {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .damnes-list-title {
+    margin: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    font-size: 14px;
+  }
+  .damnes-list-hint {
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.55);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .damnes-list-items {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 6px;
+    padding: 10px;
+    max-height: 320px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .damnes-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    background: rgba(245, 233, 208, 0.05);
+    border-left: 2px solid var(--gold-deep);
+    border-radius: 3px;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--ivory);
+  }
+  .damnes-list-text { flex: 1; line-height: 1.4; }
+  .damnes-list-remove {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: rgba(255, 107, 138, 0.7);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .damnes-list-remove:hover { background: rgba(255, 107, 138, 0.2); color: var(--neon-rose); }
+  .damnes-list-io { display: flex; gap: 8px; }
+  .damnes-io-btn {
+    flex: 1;
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .damnes-io-btn:hover:not(:disabled) { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
+  .damnes-io-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
   @media (max-width: 720px) {
     .damnes-hud { padding: 12px 16px; }
     .damnes-hud-row { gap: 8px; }
@@ -977,10 +1233,13 @@
   const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
   const SESSION_KEY = "damnes_session";
+  const CUSTOM_CONFESSIONS_KEY = "damnes_custom_confessions";
+  const CUSTOM_RULES_KEY = "damnes_custom_rules";
   const PHASE_WELCOME = "welcome";
   const PHASE_SETUP = "setup";
   const PHASE_PLAYING = "playing";
   const PHASE_END = "end";
+  const PHASE_CUSTOM = "custom";
 
   function emptySession() {
     return {
@@ -1559,7 +1818,7 @@
   }
 
   // ── Welcome ──────────────────────────────────────────────────────────
-  function WelcomeScreen({ hasSession, onNew, onResume }) {
+  function WelcomeScreen({ hasSession, onNew, onResume, onCustomize }) {
     return (
       <div className="damnes-welcome">
         <div className="damnes-eyebrow">— ★ jeu №3 ★ —</div>
@@ -1574,7 +1833,135 @@
               REPRENDRE LA TOURNÉE
             </button>
           )}
+          <button className="damnes-cta-secondary" onClick={onCustomize}>
+            ⚙ PERSONNALISER LE CONTENU
+          </button>
           <a className="damnes-back-link" href="index.html">← Retour au Cercle</a>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Custom editor (Phase 4) ──────────────────────────────────────────
+  // Édite les listes custom de Confessions et Règles. Merge avec les
+  // préfaits au moment de la pioche dans App.content.
+  function ListEditor({ title, hint, items, onChange, ioPrefix }) {
+    const [draft, setDraft] = useState("");
+    const fileRef = useRef(null);
+
+    const add = () => {
+      const v = draft.trim();
+      if (!v) return;
+      if (items.includes(v)) { setDraft(""); return; }
+      onChange([...items, v]);
+      setDraft("");
+    };
+    const remove = (i) => onChange(items.filter((_, j) => j !== i));
+
+    const exportJson = () => {
+      const blob = new Blob([JSON.stringify(items, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const stamp = new Date().toISOString().slice(0, 10);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${ioPrefix}-${stamp}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    };
+    const importJson = (file) => {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (!Array.isArray(parsed)) throw new Error("le fichier doit contenir un tableau de strings.");
+          const cleaned = Array.from(new Set(
+            parsed.map(s => typeof s === "string" ? s.trim() : "").filter(Boolean)
+          ));
+          if (cleaned.length === 0) throw new Error("aucune entrée valide.");
+          if (!confirm(`Remplacer la liste actuelle par le fichier importé (${cleaned.length} entrées) ?`)) return;
+          onChange(cleaned);
+        } catch (err) {
+          alert("Import impossible : " + (err.message || "JSON invalide."));
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    return (
+      <div className="damnes-list-editor">
+        <h3 className="damnes-list-title">
+          {title} <span className="damnes-list-count">{items.length}</span>
+        </h3>
+        {hint && <div className="damnes-list-hint">{hint}</div>}
+        <div className="damnes-add-row">
+          <input className="damnes-add-input"
+                 value={draft}
+                 onChange={e => setDraft(e.target.value.slice(0, 200))}
+                 onKeyDown={e => e.key === "Enter" && add()}
+                 placeholder="Ajouter une entrée custom..."
+                 maxLength={200} />
+          <button className="damnes-add-btn" onClick={add} disabled={!draft.trim()}>+</button>
+        </div>
+        <div className="damnes-list-items">
+          {items.length === 0 ? (
+            <div className="damnes-empty">Aucune entrée custom. Le pool reste sur les préfaits.</div>
+          ) : items.map((it, i) => (
+            <div key={i} className="damnes-list-item">
+              <span className="damnes-list-text">{it}</span>
+              <button className="damnes-list-remove" onClick={() => remove(i)} aria-label="Supprimer">×</button>
+            </div>
+          ))}
+        </div>
+        <div className="damnes-list-io">
+          <button className="damnes-io-btn" onClick={exportJson} disabled={items.length === 0}>↓ Exporter JSON</button>
+          <button className="damnes-io-btn" onClick={() => fileRef.current?.click()}>↑ Importer JSON</button>
+          <input ref={fileRef} type="file" accept="application/json,.json"
+                 style={{ display: "none" }}
+                 onChange={(e) => {
+                   const f = e.target.files?.[0];
+                   if (f) importJson(f);
+                   e.target.value = "";
+                 }} />
+        </div>
+      </div>
+    );
+  }
+
+  function CustomScreen({ confessions, rules, setConfessions, setRules, onBack }) {
+    const [tab, setTab] = useState("confessions");
+    return (
+      <div className="damnes-custom">
+        <div className="damnes-custom-head">
+          <h2 className="damnes-custom-title">Personnaliser le contenu</h2>
+          <div className="damnes-custom-sub">
+            Tes ajouts s'empilent sur les préfaits. Suppression = retire seulement le tien.
+          </div>
+        </div>
+        <div className="damnes-custom-tabs">
+          <button className={"damnes-custom-tab" + (tab === "confessions" ? " active" : "")}
+                  onClick={() => setTab("confessions")}>
+            Confessionnal <span className="damnes-list-count">{confessions.length}</span>
+          </button>
+          <button className={"damnes-custom-tab" + (tab === "rules" ? " active" : "")}
+                  onClick={() => setTab("rules")}>
+            Règles <span className="damnes-list-count">{rules.length}</span>
+          </button>
+        </div>
+        {tab === "confessions" && (
+          <ListEditor title="Questions de Confessionnal"
+                      hint="Une question gênante par ligne. Sera tirée au sort comme les préfaites."
+                      items={confessions} onChange={setConfessions}
+                      ioPrefix="damnes-confessions" />
+        )}
+        {tab === "rules" && (
+          <ListEditor title="Règles persistantes"
+                      hint="Une règle par ligne. Active 3 à 6 manches au tirage."
+                      items={rules} onChange={setRules}
+                      ioPrefix="damnes-rules" />
+        )}
+        <div className="damnes-setup-actions">
+          <button className="damnes-back-btn" onClick={onBack}>← Retour</button>
         </div>
       </div>
     );
@@ -1716,9 +2103,43 @@
   }
 
   // ── End ──────────────────────────────────────────────────────────────
+  // Synthétise une narration courte d'une manche pour l'écran de fin.
+  function describeManche(session, m) {
+    if (!m) return "";
+    const nm = (id) => {
+      const p = session.players.find(pp => pp.id === id);
+      return p ? p.name : "?";
+    };
+    switch (m.type) {
+      case "duel":      return `${nm(m.playerA)} vs ${nm(m.playerB)} — ${m.minigame}`;
+      case "vote":      return `${m.question}`;
+      case "sniper":    return `${m.criteria} → ${nm(m.target)}`;
+      case "cascade":   return `Cascade : ${m.sequence.map(s => nm(s.playerId) + " (" + s.dose + ")").join(", ")}`;
+      case "rule":      return `Règle imposée : ${m.text}`;
+      case "confession":return `Confession de ${nm(m.target)} : ${m.question}`;
+      case "roulette":  return `Roulette russe sur ${nm(m.target)} — ${m.result === "culsec" ? "CUL SEC" : "sauvé"}`;
+      case "twist":     return m.text;
+      case "karma":     return `Le Karma frappe ${nm(m.target)}.`;
+      case "alliance":  return `Alliance forcée : ${nm(m.playerA)} + ${nm(m.playerB)}`;
+      default:          return m.type;
+    }
+  }
+
   function EndScreen({ session, onSave, onNew, saved }) {
     const sorted = [...session.players].sort((a, b) => b.gulps - a.gulps);
     const totalGulps = session.players.reduce((s, p) => s + p.gulps, 0);
+    // Manche mémorable : on tire au hasard parmi celles qui ont fait boire ≥ 3 gorgées.
+    const memorable = useMemo(() => {
+      const punchy = session.history.filter(h => {
+        if (!h.summary) return false;
+        const n = h.summary.filter(s => s.kind === "gulp").reduce((s, x) => s + Math.abs(x.n), 0);
+        return n >= 3;
+      });
+      const pool = punchy.length ? punchy : session.history.filter(h => h.summary && h.summary.length);
+      if (pool.length === 0) return null;
+      return pool[Math.floor(Math.random() * pool.length)];
+    }, [session.history.length]);
+
     return (
       <div className="damnes-end">
         <h2 className="damnes-end-title">Fin de la Tournée</h2>
@@ -1727,6 +2148,7 @@
           <div>{totalGulps} gorgées distribuées</div>
           <div>{session.players.length} damnés</div>
         </div>
+
         {sorted.length > 0 && (
           <div className="damnes-podium">
             <h3>Podium des plus arrosés</h3>
@@ -1739,6 +2161,31 @@
             ))}
           </div>
         )}
+
+        {sorted.length > 3 && (
+          <div className="damnes-classement">
+            <h3>Classement complet</h3>
+            <ol className="damnes-classement-list">
+              {sorted.map((p) => (
+                <li key={p.id} className="damnes-classement-row">
+                  <span className="damnes-classement-name">{p.name}</span>
+                  <span className="damnes-classement-bar"
+                        style={{ width: Math.max(4, totalGulps > 0 ? (p.gulps / sorted[0].gulps) * 100 : 0) + "%" }} />
+                  <span className="damnes-classement-gulps">{p.gulps}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {memorable && (
+          <div className="damnes-memorable">
+            <h3>Manche mémorable</h3>
+            <div className="damnes-memorable-tag">{memorable.type.toUpperCase()}</div>
+            <div className="damnes-memorable-text">{describeManche(session, memorable)}</div>
+          </div>
+        )}
+
         <div className="damnes-end-actions">
           <button className="damnes-end-save" onClick={onSave} disabled={saved}>
             {saved ? "✓ Sauvegardé" : "Sauvegarder dans le Hall"}
@@ -2145,6 +2592,7 @@
       if (hasSession) setPhase(PHASE_PLAYING);
     };
     const backToWelcome = () => setPhase(PHASE_WELCOME);
+    const goCustomize = () => setPhase(PHASE_CUSTOM);
 
     const addPlayer = (name) => {
       const trimmed = name.trim();
@@ -2168,15 +2616,29 @@
       setPhase(PHASE_PLAYING);
     };
 
-    // Contenu mergé : préfaits + custom (Phase 4 ajoutera le custom).
+    // Custom content (Phase 4) — listes user-supplied mergées aux préfaits.
+    const [customConfessions, setCustomConfessionsState] = useState(() => storage.get(CUSTOM_CONFESSIONS_KEY, []));
+    const setCustomConfessions = useCallback((arr) => {
+      setCustomConfessionsState(arr);
+      storage.set(CUSTOM_CONFESSIONS_KEY, arr);
+    }, []);
+    const [customRules, setCustomRulesState] = useState(() => storage.get(CUSTOM_RULES_KEY, []));
+    const setCustomRules = useCallback((arr) => {
+      setCustomRulesState(arr);
+      storage.set(CUSTOM_RULES_KEY, arr);
+    }, []);
+
+    // Contenu mergé : préfaits + custom (même poids dans la pioche par
+    // simple concat — la pioche pickRandom est uniforme sur le pool).
     const content = useMemo(() => ({
       votes: QUESTIONS_VOTE,
-      confessions: QUESTIONS_CONFESSION,
-      rules: RULES_PERSISTANT,
-    }), []);
+      confessions: [...QUESTIONS_CONFESSION, ...customConfessions],
+      rules: [...RULES_PERSISTANT, ...customRules],
+    }), [customConfessions, customRules]);
 
     // Tire la prochaine manche : log la précédente, tick timers, pioche, build.
     const nextManche = () => {
+      let pickedType = null;
       setSession(s => {
         let next = { ...s };
         // Log la manche précédente si elle est résolue
@@ -2186,12 +2648,30 @@
         next.manche_count = s.manche_count + 1;
         next = tickTimers(next);
         const type = pickMancheType(next);
+        pickedType = type;
         const m = buildManche(type, next, content);
         next.current_manche = { ...m, resolved: false };
         return next;
       });
-      try { window.audio.playClick(0.12); } catch (e) {}
-      setTimeout(() => { try { window.audio.playMancheStart(); } catch (e) {} }, 60);
+      // Son d'entrée variable selon le type (cf. brief)
+      try { window.audio.playClick(0.1); } catch (e) {}
+      setTimeout(() => {
+        try {
+          switch (pickedType) {
+            case "duel":       window.audio.playMancheStart(0.16); break;
+            case "vote":       window.audio.playClick(0.18); break;
+            case "sniper":     window.audio.playDing(0.16); break;
+            case "cascade":    window.audio.playMancheStart(0.18); break;
+            case "rule":       window.audio.playLock(0.14); break;
+            case "confession": window.audio.playStamp(0.16); break;
+            case "roulette":   window.audio.playDrumroll(2.0, 0.14); break;
+            case "twist":      window.audio.playTwist(0.18); break;
+            case "karma":      window.audio.playKarmaStrike(0.18); break;
+            case "alliance":   window.audio.playLock(0.16); break;
+            default:           window.audio.playMancheStart(0.16);
+          }
+        } catch (e) {}
+      }, 60);
     };
 
     // MAJ de la manche en cours (vote in progress, désignation, etc.)
@@ -2253,7 +2733,15 @@
         {phase === PHASE_WELCOME && (
           <WelcomeScreen hasSession={hasSession}
                          onNew={newTournee}
-                         onResume={resumeTournee} />
+                         onResume={resumeTournee}
+                         onCustomize={goCustomize} />
+        )}
+        {phase === PHASE_CUSTOM && (
+          <CustomScreen confessions={customConfessions}
+                        rules={customRules}
+                        setConfessions={setCustomConfessions}
+                        setRules={setCustomRules}
+                        onBack={backToWelcome} />
         )}
         {phase === PHASE_SETUP && (
           <SetupScreen players={session.players}
