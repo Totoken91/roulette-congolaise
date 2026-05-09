@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>La Tournée des Damnés — Le Cercle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="shared/shared.css" />
+
+<style>
+  body { overflow-x: hidden; }
+
+  .damnes {
+    min-height: 100vh;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 50% 0%, var(--damned-purple) 0%, var(--bg-velvet) 35%, var(--bg-deep) 75%),
+      var(--bg-deep);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Welcome ────────────────────────────────────────────────────────── */
+  .damnes-welcome {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px;
+    text-align: center;
+    gap: 18px;
+  }
+  .damnes-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--gold);
+    letter-spacing: 0.4em;
+    font-size: 13px;
+    opacity: 0.85;
+  }
+  .damnes-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(48px, 8vw, 96px);
+    margin: 0;
+    line-height: 1;
+    background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 35%, var(--copper) 65%, var(--damned-purple) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    filter: drop-shadow(0 6px 24px rgba(61, 30, 92, 0.55));
+    animation: damnes-title-pulse 6s ease-in-out infinite;
+  }
+  @keyframes damnes-title-pulse {
+    0%, 100% { filter: drop-shadow(0 6px 24px rgba(61, 30, 92, 0.55)); }
+    50%      { filter: drop-shadow(0 6px 36px rgba(61, 30, 92, 0.85)) drop-shadow(0 0 24px rgba(255, 107, 138, 0.3)); }
+  }
+  .damnes-tag {
+    font-family: 'Special Elite', monospace;
+    color: var(--neon-rose);
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    margin-bottom: 30px;
+  }
+
+  .damnes-cta-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+    margin-top: 12px;
+  }
+  .damnes-cta-primary {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    position: relative;
+    padding: 6px;
+    background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 50%, var(--gold-deep) 100%);
+    border-radius: 999px;
+    box-shadow:
+      0 0 0 3px var(--bg-deep),
+      0 0 0 5px var(--gold),
+      0 12px 36px rgba(61, 30, 92, 0.5),
+      0 0 56px rgba(61, 30, 92, 0.3);
+    transition: transform 0.12s ease-out, filter 0.2s;
+    overflow: hidden;
+  }
+  .damnes-cta-primary:hover { transform: scale(1.04); filter: brightness(1.05); }
+  .damnes-cta-primary:active { transform: scale(0.97); }
+  .damnes-cta-primary > span {
+    display: block;
+    background: radial-gradient(circle at 30% 30%, var(--copper) 0%, var(--damned-purple) 75%);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 24px;
+    padding: 22px 56px;
+    border-radius: 999px;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.6);
+    border: 2px solid var(--gold);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.55),
+      inset 0 -2px 6px rgba(0, 0, 0, 0.55);
+  }
+  .damnes-cta-secondary {
+    appearance: none;
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .damnes-cta-secondary:hover { background: rgba(212, 175, 55, 0.1); }
+
+  .damnes-back-link {
+    margin-top: 14px;
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.55);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+  }
+  .damnes-back-link:hover { color: var(--gold-pale); }
+
+  /* ── Setup ─────────────────────────────────────────────────────────── */
+  .damnes-setup {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 24px;
+    gap: 18px;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .damnes-setup-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 42px);
+    color: var(--gold-pale);
+    text-align: center;
+    margin: 0 0 4px;
+  }
+  .damnes-counter {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.32em;
+    color: var(--neon-rose);
+    font-size: 14px;
+  }
+  .damnes-add-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+  .damnes-add-input {
+    flex: 1;
+    appearance: none;
+    background: rgba(245, 233, 208, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
+    color: var(--ivory);
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    padding: 12px 14px;
+    outline: none;
+  }
+  .damnes-add-input:focus { border-color: var(--gold); background: rgba(245, 233, 208, 0.08); }
+  .damnes-add-input::placeholder { color: rgba(245, 233, 208, 0.35); }
+  .damnes-add-input.shake { animation: damnes-shake 0.25s; }
+  @keyframes damnes-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  .damnes-add-btn {
+    appearance: none;
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold-deep));
+    color: var(--ink);
+    border: 0;
+    border-radius: 4px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 14px;
+    padding: 12px 22px;
+    cursor: pointer;
+  }
+  .damnes-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .damnes-add-btn:hover:not(:disabled) { filter: brightness(1.06); }
+
+  .damnes-players {
+    width: 100%;
+    min-height: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 6px;
+  }
+  .damnes-empty {
+    width: 100%;
+    text-align: center;
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.4);
+    padding: 24px 16px;
+    font-size: 13px;
+  }
+  .damnes-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 8px 8px 14px;
+    background: rgba(245, 233, 208, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 999px;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--ivory);
+  }
+  .damnes-chip-x {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: rgba(255, 107, 138, 0.7);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .damnes-chip-x:hover { background: rgba(255, 107, 138, 0.2); color: var(--neon-rose); }
+
+  .damnes-warn {
+    font-family: 'Special Elite', monospace;
+    color: rgba(255, 107, 138, 0.85);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  .damnes-setup-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .damnes-back-btn {
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .damnes-back-btn:hover { background: rgba(212, 175, 55, 0.1); }
+  .damnes-start-btn {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    background: linear-gradient(180deg, var(--copper), var(--damned-purple));
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 16px;
+    padding: 14px 32px;
+    border-radius: 4px;
+    border: 2px solid var(--gold);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.4),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.45),
+      0 6px 24px rgba(61, 30, 92, 0.5);
+  }
+  .damnes-start-btn:hover:not(:disabled) { filter: brightness(1.08); }
+  .damnes-start-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── HUD (visible pendant le jeu) ──────────────────────────────────── */
+  .damnes-hud {
+    position: relative;
+    z-index: 2;
+    padding: 16px 28px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .damnes-hud-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .damnes-hud-back {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--gold-pale);
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 6px 12px;
+    border-radius: 4px;
+  }
+  .damnes-hud-back:hover { background: rgba(212, 175, 55, 0.1); }
+  .damnes-hud-meta {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--gold-pale);
+  }
+  .damnes-end-btn {
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(255, 107, 138, 0.5);
+    color: var(--neon-rose);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .damnes-end-btn:hover { background: rgba(255, 107, 138, 0.12); }
+
+  .damnes-scores {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212, 175, 55, 0.4) transparent;
+    padding-bottom: 4px;
+  }
+  .damnes-score {
+    flex-shrink: 0;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(245, 233, 208, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 4px;
+    min-width: 70px;
+  }
+  .damnes-score-name {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.1em;
+    font-size: 12px;
+    color: var(--gold-pale);
+    white-space: nowrap;
+  }
+  .damnes-score-gulps {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    color: var(--ivory);
+    margin-top: 2px;
+  }
+
+  /* ── Stage / manche stub ──────────────────────────────────────────── */
+  .damnes-stage {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+  }
+  .damnes-manche-stub {
+    text-align: center;
+    max-width: 600px;
+    padding: 48px 32px;
+    background: rgba(245, 233, 208, 0.04);
+    border: 1px dashed rgba(212, 175, 55, 0.4);
+    border-radius: 8px;
+  }
+  .damnes-manche-label {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.4em;
+    font-size: 12px;
+    color: var(--neon-rose);
+    margin-bottom: 18px;
+  }
+  .damnes-manche-num {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(48px, 8vw, 80px);
+    color: var(--gold-pale);
+    line-height: 1;
+    margin-bottom: 18px;
+  }
+  .damnes-manche-text {
+    font-family: 'Special Elite', monospace;
+    font-size: 14px;
+    color: rgba(245, 233, 208, 0.7);
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+  .damnes-next-btn {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    background: linear-gradient(180deg, var(--copper) 0%, var(--damned-purple) 100%);
+    color: var(--gold-pale);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 16px;
+    padding: 14px 28px;
+    border-radius: 4px;
+    border: 2px solid var(--gold);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 216, 0.4),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.45),
+      0 6px 24px rgba(61, 30, 92, 0.5);
+  }
+  .damnes-next-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  /* ── End ─────────────────────────────────────────────────────────── */
+  .damnes-end {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 24px;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 24px;
+  }
+  .damnes-end-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(36px, 5vw, 54px);
+    text-align: center;
+    margin: 0;
+    background: linear-gradient(180deg, var(--gold-pale), var(--damned-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .damnes-end-stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-family: 'Special Elite', monospace;
+    color: rgba(245, 233, 208, 0.75);
+    font-size: 14px;
+    letter-spacing: 0.06em;
+  }
+  .damnes-podium {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .damnes-podium h3 {
+    margin: 0 0 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-align: center;
+    font-size: 14px;
+  }
+  .damnes-podium-row {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    background: rgba(245, 233, 208, 0.05);
+    border-left: 4px solid var(--gold-deep);
+    border-radius: 3px;
+  }
+  .damnes-podium-row.pos-1 { border-left-color: var(--gold); }
+  .damnes-podium-row.pos-2 { border-left-color: var(--copper); }
+  .damnes-podium-row.pos-3 { border-left-color: var(--damned-purple); }
+  .damnes-pos {
+    font-family: 'DM Mono', monospace;
+    color: var(--gold);
+    font-size: 16px;
+  }
+  .damnes-pos-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ivory);
+  }
+  .damnes-pos-gulps {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.12em;
+    font-size: 13px;
+    color: var(--neon-rose);
+  }
+  .damnes-end-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .damnes-end-actions button,
+  .damnes-end-actions a {
+    appearance: none;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 14px;
+    padding: 12px 22px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 0;
+  }
+  .damnes-end-save {
+    background: linear-gradient(180deg, var(--gold-pale), var(--gold-deep));
+    color: var(--ink);
+  }
+  .damnes-end-save:hover:not(:disabled) { filter: brightness(1.06); }
+  .damnes-end-save:disabled { opacity: 0.6; cursor: default; }
+  .damnes-end-new {
+    background: linear-gradient(180deg, var(--copper), var(--damned-purple));
+    color: var(--gold-pale);
+    border: 2px solid var(--gold);
+  }
+  .damnes-end-new:hover { filter: brightness(1.08); }
+  .damnes-end-hub {
+    background: transparent;
+    color: var(--gold-pale);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    display: inline-flex;
+    align-items: center;
+  }
+  .damnes-end-hub:hover { background: rgba(212, 175, 55, 0.1); }
+
+  @media (max-width: 720px) {
+    .damnes-hud { padding: 12px 16px; }
+    .damnes-hud-row { gap: 8px; }
+    .damnes-add-row { flex-direction: column; }
+    .damnes-add-btn { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .damnes-title { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script type="text/babel" data-presets="react" src="shared/shared.js"></script>
+
+  <script type="text/babel" data-presets="react">
+  const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+  const SESSION_KEY = "damnes_session";
+  const PHASE_WELCOME = "welcome";
+  const PHASE_SETUP = "setup";
+  const PHASE_PLAYING = "playing";
+  const PHASE_END = "end";
+
+  function emptySession() {
+    return {
+      players: [],
+      active_rules: [],
+      alliances: [],
+      manche_count: 0,
+      history: [],
+      current_manche: null,
+    };
+  }
+
+  function uuid() {
+    if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+    return "p_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+  }
+
+  // ── Welcome ──────────────────────────────────────────────────────────
+  function WelcomeScreen({ hasSession, onNew, onResume }) {
+    return (
+      <div className="damnes-welcome">
+        <div className="damnes-eyebrow">— ★ jeu №3 ★ —</div>
+        <h1 className="damnes-title">La Tournée des Damnés</h1>
+        <div className="damnes-tag">Buvez. Subissez. Recommencez.</div>
+        <div className="damnes-cta-stack">
+          <button className="damnes-cta-primary" onClick={onNew}>
+            <span>NOUVELLE TOURNÉE</span>
+          </button>
+          {hasSession && (
+            <button className="damnes-cta-secondary" onClick={onResume}>
+              REPRENDRE LA TOURNÉE
+            </button>
+          )}
+          <a className="damnes-back-link" href="index.html">← Retour au Cercle</a>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Setup ────────────────────────────────────────────────────────────
+  function SetupScreen({ players, onAdd, onRemove, onStart, onBack }) {
+    const [draft, setDraft] = useState("");
+    const [shake, setShake] = useState(false);
+
+    const submit = () => {
+      const v = draft.trim();
+      if (!v) return;
+      const ok = onAdd(v);
+      if (ok) setDraft("");
+      else { setShake(true); setTimeout(() => setShake(false), 250); }
+    };
+
+    const canStart = players.length >= 3 && players.length <= 8;
+
+    return (
+      <div className="damnes-setup">
+        <h2 className="damnes-setup-title">Qui s'autodétruit ce soir ?</h2>
+        <div className="damnes-counter">{players.length} / 8 joueurs</div>
+        <div className="damnes-add-row">
+          <input className={"damnes-add-input" + (shake ? " shake" : "")}
+                 value={draft}
+                 onChange={(e) => setDraft(e.target.value.slice(0, 24))}
+                 onKeyDown={(e) => e.key === "Enter" && submit()}
+                 placeholder="Prénom du damné..."
+                 maxLength={24}
+                 autoFocus />
+          <button className="damnes-add-btn"
+                  onClick={submit}
+                  disabled={!draft.trim() || players.length >= 8}>Ajouter</button>
+        </div>
+        <div className="damnes-players">
+          {players.length === 0 ? (
+            <div className="damnes-empty">Pas de damnés pour l'instant. Ajoutes-en au moins 3.</div>
+          ) : players.map(p => (
+            <div key={p.id} className="damnes-chip">
+              <span>{p.name}</span>
+              <button className="damnes-chip-x" onClick={() => onRemove(p.id)}
+                      aria-label={"Retirer " + p.name}>×</button>
+            </div>
+          ))}
+        </div>
+        {players.length < 3 && (
+          <div className="damnes-warn">Minimum 3 joueurs pour la tournée.</div>
+        )}
+        {players.length >= 8 && (
+          <div className="damnes-warn">Maximum 8 — la table est pleine.</div>
+        )}
+        <div className="damnes-setup-actions">
+          <button className="damnes-back-btn" onClick={onBack}>← Retour</button>
+          <button className="damnes-start-btn" onClick={onStart} disabled={!canStart}>
+            C'EST PARTI
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── HUD ──────────────────────────────────────────────────────────────
+  function Hud({ session, onEnd }) {
+    return (
+      <header className="damnes-hud">
+        <div className="damnes-hud-row">
+          <a className="damnes-hud-back" href="index.html">← Cercle</a>
+          <div className="damnes-hud-meta">Manche {session.manche_count}</div>
+          <button className="damnes-end-btn" onClick={onEnd}>Terminer</button>
+        </div>
+        <div className="damnes-scores">
+          {session.players.map(p => (
+            <div key={p.id} className="damnes-score">
+              <span className="damnes-score-name">{p.name}</span>
+              <span className="damnes-score-gulps">{p.gulps}</span>
+            </div>
+          ))}
+        </div>
+        {/* Bandeaux règles + alliances : Phase 2/3 */}
+      </header>
+    );
+  }
+
+  // ── Playing (stub Phase 1) ───────────────────────────────────────────
+  function PlayingScreen({ session, onNext, onEnd }) {
+    return (
+      <>
+        <Hud session={session} onEnd={onEnd} />
+        <main className="damnes-stage">
+          <div className="damnes-manche-stub">
+            <div className="damnes-manche-label">MANCHE</div>
+            <div className="damnes-manche-num">{session.manche_count || "—"}</div>
+            <div className="damnes-manche-text">
+              Le moteur de manches arrive en Phase 2.<br />
+              {session.players.length} damnés en attente de jugement.
+            </div>
+            <button className="damnes-next-btn" onClick={onNext}>
+              MANCHE SUIVANTE
+            </button>
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  // ── End ──────────────────────────────────────────────────────────────
+  function EndScreen({ session, onSave, onNew, saved }) {
+    const sorted = [...session.players].sort((a, b) => b.gulps - a.gulps);
+    const totalGulps = session.players.reduce((s, p) => s + p.gulps, 0);
+    return (
+      <div className="damnes-end">
+        <h2 className="damnes-end-title">Fin de la Tournée</h2>
+        <div className="damnes-end-stats">
+          <div>{session.manche_count} manches subies</div>
+          <div>{totalGulps} gorgées distribuées</div>
+          <div>{session.players.length} damnés</div>
+        </div>
+        {sorted.length > 0 && (
+          <div className="damnes-podium">
+            <h3>Podium des plus arrosés</h3>
+            {sorted.slice(0, 3).map((p, i) => (
+              <div key={p.id} className={"damnes-podium-row pos-" + (i + 1)}>
+                <span className="damnes-pos">#{i + 1}</span>
+                <span className="damnes-pos-name">{p.name}</span>
+                <span className="damnes-pos-gulps">{p.gulps} gorgées</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="damnes-end-actions">
+          <button className="damnes-end-save" onClick={onSave} disabled={saved}>
+            {saved ? "✓ Sauvegardé" : "Sauvegarder dans le Hall"}
+          </button>
+          <button className="damnes-end-new" onClick={onNew}>Nouvelle tournée</button>
+          <a className="damnes-end-hub" href="index.html">Retour au Cercle</a>
+        </div>
+      </div>
+    );
+  }
+
+  // ── App ──────────────────────────────────────────────────────────────
+  function App() {
+    const initial = storage.get(SESSION_KEY, null);
+    const initialHasOngoing = !!(initial && Array.isArray(initial.players) && initial.players.length >= 3);
+
+    const [session, setSessionState] = useState(initial || emptySession());
+    const setSession = useCallback((updater) => {
+      setSessionState(prev => {
+        const next = typeof updater === "function" ? updater(prev) : updater;
+        storage.set(SESSION_KEY, next);
+        return next;
+      });
+    }, []);
+
+    const [phase, setPhase] = useState(initialHasOngoing ? PHASE_PLAYING : PHASE_WELCOME);
+    const [endSaved, setEndSaved] = useState(false);
+
+    // hasSession est dérivé en live au cas où on vide la session
+    const hasSession = session.players.length >= 3;
+
+    const newTournee = () => {
+      setSession(emptySession());
+      setEndSaved(false);
+      setPhase(PHASE_SETUP);
+    };
+    const resumeTournee = () => {
+      if (hasSession) setPhase(PHASE_PLAYING);
+    };
+    const backToWelcome = () => setPhase(PHASE_WELCOME);
+
+    const addPlayer = (name) => {
+      const trimmed = name.trim();
+      if (!trimmed) return false;
+      if (session.players.length >= 8) return false;
+      if (session.players.some(p => p.name.toLowerCase() === trimmed.toLowerCase())) return false;
+      setSession(s => ({
+        ...s,
+        players: [...s.players, { id: uuid(), name: trimmed, gulps: 0, karma: 0 }],
+      }));
+      return true;
+    };
+    const removePlayer = (id) => {
+      setSession(s => ({ ...s, players: s.players.filter(p => p.id !== id) }));
+    };
+
+    const startTournee = () => {
+      if (session.players.length < 3 || session.players.length > 8) return;
+      setSession(s => ({ ...s, manche_count: 0, history: [], active_rules: [], alliances: [] }));
+      setEndSaved(false);
+      setPhase(PHASE_PLAYING);
+    };
+
+    // Stub Phase 1 : juste incrémente le compteur. Phase 2 branchera le moteur.
+    const nextManche = () => {
+      setSession(s => ({ ...s, manche_count: s.manche_count + 1 }));
+    };
+
+    const endTournee = () => {
+      setEndSaved(false);
+      setPhase(PHASE_END);
+    };
+
+    const saveToHall = () => {
+      const sorted = [...session.players].sort((a, b) => b.gulps - a.gulps);
+      hall.add({
+        game: "damnes",
+        players: sorted.map(p => ({ name: p.name, gulps: p.gulps })),
+        manche_count: session.manche_count,
+        winner: sorted[0] ? sorted[0].name : "Anonyme",
+        loser: sorted[sorted.length - 1] ? sorted[sorted.length - 1].name : "Anonyme",
+      });
+      setEndSaved(true);
+    };
+
+    const newAfterEnd = () => {
+      storage.remove(SESSION_KEY);
+      setSessionState(emptySession());
+      setEndSaved(false);
+      setPhase(PHASE_SETUP);
+    };
+
+    return (
+      <div className="damnes">
+        <DustParticles />
+        {phase === PHASE_WELCOME && (
+          <WelcomeScreen hasSession={hasSession}
+                         onNew={newTournee}
+                         onResume={resumeTournee} />
+        )}
+        {phase === PHASE_SETUP && (
+          <SetupScreen players={session.players}
+                       onAdd={addPlayer}
+                       onRemove={removePlayer}
+                       onStart={startTournee}
+                       onBack={backToWelcome} />
+        )}
+        {phase === PHASE_PLAYING && (
+          <PlayingScreen session={session}
+                         onNext={nextManche}
+                         onEnd={endTournee} />
+        )}
+        {phase === PHASE_END && (
+          <EndScreen session={session}
+                     onSave={saveToHall}
+                     onNew={newAfterEnd}
+                     saved={endSaved} />
+        )}
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
